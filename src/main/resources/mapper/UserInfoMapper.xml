@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.recallbackend.mapper.UserInfoMapper">
+
+    <select id="selectIdByPhone" resultType="java.lang.Integer">
+        select user_id
+        from user_info
+        where phone = #{phone,javaType=STRING}
+    </select>
+
+    <insert id="insertAllByUserId" parameterType="com.example.recallbackend.pojo.domain.UserInfo">
+        insert into user_info (phone, state)
+        values (#{phone,javaType=STRING}, #{state,javaType=INTEGER})
+    </insert>
+
+    <update id="updateAllByUserId" parameterType="com.example.recallbackend.pojo.domain.UserInfo">
+        update user_info set
+            state = #{state}
+        where user_id = #{userId,javaType=INTEGER}
+    </update>
+</mapper>
