@@ -9,6 +9,8 @@ public interface UserInfoMapper {
 
     Integer selectIdByPhone(String phone);
 
+    UserInfo selectAllByUserId(Integer userId);
+
     LoginSuccessResult selectLoginByUserId(Integer userId);
 
     int insertAllByUserId(UserInfo userInfo);

@@ -64,16 +64,16 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public CommonResult<LoginSuccessResult> loginVerification(VerificationParam verificationParam) {
 
-        log.info("验证验证码");
-        Object verificationCode = redisUtil.get(verificationParam.getPhone() + "sms");
-        if (verificationCode == null) {
-            return CommonResult.fail("验证码不存在或已过期");
-        }
-
-        if ( !verificationParam.getVerificationCode().equals(verificationCode)) {
-            return CommonResult.fail("验证码不存在或已过期");
-        }
-        LoginSuccessResult result = new LoginSuccessResult();
+//        log.info("验证验证码");
+//        Object verificationCode = redisUtil.get(verificationParam.getPhone() + "sms");
+//        if (verificationCode == null) {
+//            return CommonResult.fail("验证码不存在或已过期");
+//        }
+//
+//        if ( !verificationParam.getVerificationCode().equals(verificationCode)) {
+//            return CommonResult.fail("验证码不存在或已过期");
+//        }
+        LoginSuccessResult result;
 
         //更新数据库
         log.info("更新数据库，注册用户");
@@ -126,7 +126,7 @@ public class LoginServiceImpl implements LoginService {
 
         if (decode != null) {
 
-            Integer userId = Integer.valueOf(decode.getClaims().get("userId").toString());
+            Integer userId = Integer.valueOf(decode.getClaims().get("userId").toString().replaceAll("\"",""));
 
             LoginSuccessResult result = userInfoMapper.selectLoginByUserId(userId);
 

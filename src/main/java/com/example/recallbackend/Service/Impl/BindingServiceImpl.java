@@ -4,17 +4,25 @@ import com.example.recallbackend.Service.BindingService;
 import com.example.recallbackend.mapper.UserInfoMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.domain.UserInfo;
 import com.example.recallbackend.pojo.dto.param.ChildNameParam;
 import com.example.recallbackend.pojo.dto.param.NameParam;
+import com.example.recallbackend.pojo.dto.param.UserIdParam;
+import com.example.recallbackend.utils.MD5Utils.Md5Util;
+import com.example.recallbackend.utils.QRCodeUtils.MyQRCodeUtil;
+import com.example.recallbackend.utils.RedisUtils.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author tzih
  * @date 2022.09.19
  */
 @Service
+@Slf4j
 public class BindingServiceImpl implements BindingService {
 
     @Resource
@@ -22,6 +30,9 @@ public class BindingServiceImpl implements BindingService {
 
     @Resource
     private UserRelationMapper userRelationMapper;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     @Override
     public CommonResult<String> parentChangeName(NameParam nameParam) {
@@ -65,5 +76,27 @@ public class BindingServiceImpl implements BindingService {
         else {
             return CommonResult.fail("解绑失败");
         }
+    }
+
+    @Override
+    public CommonResult<String> creatQRCode(UserIdParam userIdParam) {
+
+        UserInfo userInfo = userInfoMapper.selectAllByUserId(userIdParam.getUserId());
+
+        log.info("生成md5加密信息");
+        String md5Str = Md5Util.getMD5Str(userInfo.getUserId().toString() + userInfo.getName());
+
+        log.info("生成二维码base64字节数组");
+        String qrCode = MyQRCodeUtil.getQRCode(md5Str);
+
+        boolean set = redisUtil.set(userIdParam.getUserId().toString() + "QRCode", md5Str, 30, TimeUnit.MINUTES);
+
+        if (set) {
+            return CommonResult.success(qrCode);
+        }
+        else {
+            return CommonResult.fail("生成二维码失败");
+        }
+
     }
 }

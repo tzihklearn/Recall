@@ -16,18 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class MyHanlderInterceptor implements HandlerInterceptor {
 
-    @Resource
-    private HttpServletRequest request;
+//    @Resource
+//    private HttpServletRequest myRequest;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
 
         String token = request.getHeader("Authorization");
 
         DecodedJWT decode = JwtUtils.decode(token);
 
         if (decode != null) {
-            request.setAttribute("jwt", decode.getClaim("userId"));
             return true;
         }
         else {
