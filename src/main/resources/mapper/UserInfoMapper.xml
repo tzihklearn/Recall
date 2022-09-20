@@ -2,20 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.recallbackend.mapper.UserInfoMapper">
 
+<!--    <resultMap id="BaseResultMap" type="com.example.recallbackend.pojo.domain.UserInfo">-->
+<!--        <id column="user_id" jdbcType="INTEGER" property="userId"/>-->
+<!--        <id column="name" jdbcType="VARCHAR" property="name"/>-->
+<!--        <id column="phone" jdbcType="VARCHAR" property="phone"/>-->
+<!--        <id column="role_model" jdbcType="INTEGER" property="roleModel"/>-->
+<!--    </resultMap>-->
+
     <select id="selectIdByPhone" resultType="java.lang.Integer">
         select user_id
         from user_info
         where phone = #{phone,javaType=STRING}
     </select>
 
+    <select id="selectLoginByUserId" resultType="com.example.recallbackend.pojo.dto.result.LoginSuccessResult">
+        select user_id as userId, name as name, role_model as roleModel
+        from user_info
+        where user_id = #{userId,jdbcType=INTEGER}
+    </select>
+
     <insert id="insertAllByUserId" parameterType="com.example.recallbackend.pojo.domain.UserInfo">
-        insert into user_info (phone, state)
-        values (#{phone,javaType=STRING}, #{state,javaType=INTEGER})
+        insert into user_info (name, phone, state)
+        values (#{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{roleModel,jdbcType=INTEGER}, #{state,javaType=INTEGER})
     </insert>
 
     <update id="updateAllByUserId" parameterType="com.example.recallbackend.pojo.domain.UserInfo">
         update user_info set
             state = #{state}
         where user_id = #{userId,javaType=INTEGER}
+    </update>
+    <update id="updateNameByUserId">
+        update user_info set
+            name = #{name,jdbcType=VARCHAR}
+        where user_id = #{userId,jdbcType=INTEGER}
     </update>
 </mapper>

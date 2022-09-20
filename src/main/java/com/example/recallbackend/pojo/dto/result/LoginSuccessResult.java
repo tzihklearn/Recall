@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 public class LoginSuccessResult {
 
+    private Integer userId;
+
+    private String name;
+
     private Integer roleModel;
 
 }

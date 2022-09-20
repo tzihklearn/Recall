@@ -11,9 +11,9 @@ public class UserInfo {
     Integer userId;
     String loginId;
     String name;
-    String email;
     String phone;
-    String roleModel;
+    //Inner
+    Integer roleModel;
     Integer state;
     String token;
     String QRCode;

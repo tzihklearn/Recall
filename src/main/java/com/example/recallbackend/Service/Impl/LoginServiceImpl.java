@@ -1,5 +1,6 @@
 package com.example.recallbackend.Service.Impl;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.recallbackend.Service.LoginService;
 import com.example.recallbackend.common.Constant;
 import com.example.recallbackend.mapper.UserInfoMapper;
@@ -7,6 +8,7 @@ import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.domain.UserInfo;
 import com.example.recallbackend.pojo.dto.param.PhoneParam;
 import com.example.recallbackend.pojo.dto.param.VerificationParam;
+import com.example.recallbackend.pojo.dto.result.LoginSuccessResult;
 import com.example.recallbackend.utils.JwtUtils.JwtUtils;
 import com.example.recallbackend.utils.RandomUtils.RandomUtil;
 import com.example.recallbackend.utils.RedisUtils.RedisUtil;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +32,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Resource
     private UserInfoMapper userInfoMapper;
+
+    @Resource
+    private HttpServletRequest request;
 
     @Resource
     private HttpServletResponse response;
@@ -56,7 +62,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public CommonResult<String> loginVerification(VerificationParam verificationParam) {
+    public CommonResult<LoginSuccessResult> loginVerification(VerificationParam verificationParam) {
 
         log.info("验证验证码");
         Object verificationCode = redisUtil.get(verificationParam.getPhone() + "sms");
@@ -67,15 +73,7 @@ public class LoginServiceImpl implements LoginService {
         if ( !verificationParam.getVerificationCode().equals(verificationCode)) {
             return CommonResult.fail("验证码不存在或已过期");
         }
-
-        log.info("生成token");
-        //生成token
-        Map<String, String> payload = new HashMap<>();
-        payload.put("phone", verificationParam.getPhone());
-        payload.put("verificationCode", verificationParam.getVerificationCode());
-        String token = JwtUtils.getToken(payload);
-
-        response.setHeader("Authorization", token);
+        LoginSuccessResult result = new LoginSuccessResult();
 
         //更新数据库
         log.info("更新数据库，注册用户");
@@ -84,14 +82,22 @@ public class LoginServiceImpl implements LoginService {
         UserInfo userInfo = new UserInfo();
 
         if (userId == null) {
+            userInfo.setName("用户名");
             userInfo.setPhone(verificationParam.getPhone());
+            userInfo.setRoleModel(0);
             userInfo.setState(1);
             int i = userInfoMapper.insertAllByUserId(userInfo);
+
             if (i == 0) {
                 return CommonResult.fail("注册失败");
             }
             else {
-                return CommonResult.success("登陆成功");
+                Integer userIds = userInfoMapper.selectIdByPhone(verificationParam.getPhone());
+                setToken(userIds.toString(), verificationParam.getVerificationCode());
+
+                result = userInfoMapper.selectLoginByUserId(userIds);
+
+                return CommonResult.success(result);
             }
         }
         else {
@@ -102,23 +108,43 @@ public class LoginServiceImpl implements LoginService {
                 return CommonResult.fail("登陆失败");
             }
             else {
-                return CommonResult.success("登陆成功");
+                setToken(userId.toString(), verificationParam.getVerificationCode());
+
+                result = userInfoMapper.selectLoginByUserId(userId);
+
+                return CommonResult.success(result);
             }
         }
     }
 
     @Override
-    public CommonResult<String> loginByToken() {
+    public CommonResult<LoginSuccessResult> loginByToken() {
 
-        String token = response.getHeader("Authorization");
+        String token = request.getHeader("Authorization");
 
-        boolean decode = JwtUtils.decode(token);
+        DecodedJWT decode = JwtUtils.decode(token);
 
-        if (decode) {
-            return CommonResult.success("登陆成功");
+        if (decode != null) {
+
+            Integer userId = Integer.valueOf(decode.getClaims().get("userId").toString());
+
+            LoginSuccessResult result = userInfoMapper.selectLoginByUserId(userId);
+
+            return CommonResult.success(result);
         }
         else {
             return CommonResult.success("登陆失败");
         }
+    }
+
+    private void setToken(String userId, String verificationCode) {
+        //生成token
+        log.info("生成token");
+        Map<String, String> payload = new HashMap<>();
+        payload.put("userId", userId);
+        payload.put("verificationCode", verificationCode);
+        String token = JwtUtils.getToken(payload);
+
+        response.setHeader("Authorization", token);
     }
 }

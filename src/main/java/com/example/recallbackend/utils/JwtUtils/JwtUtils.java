@@ -20,16 +20,15 @@ public class JwtUtils {
      * @return token字符串
      */
     public static String getToken(Map<String,String> payload){
-        // 指定token过期时间为7天
+        // 指定token过期时间为15天
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 15);
+        calendar.add(Calendar.DATE, 7);
 
         JWTCreator.Builder builder = JWT.create();
         // 构建payload
-        payload.forEach((k,v) -> builder.withClaim(k,v));
+        payload.forEach(builder::withClaim);
         // 指定过期时间和签名算法
-        String token = builder.withExpiresAt(calendar.getTime()).sign(Algorithm.HMAC256(SECRET));
-        return token;
+        return builder.withExpiresAt(calendar.getTime()).sign(Algorithm.HMAC256(SECRET));
     }
 
 
@@ -38,15 +37,15 @@ public class JwtUtils {
      * @param token token字符串
      * @return 解析后的token
      */
-    public static boolean decode(String token){
+    public static DecodedJWT decode(String token){
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
-        DecodedJWT decodedJWT = jwtVerifier.verify(token);
-
-        if (decodedJWT.getSignature().equals(decodedJWT.getHeader() + "." + decodedJWT.getPayload())) {
-            return true;
+        DecodedJWT decodedJWT = null;
+        try {
+            decodedJWT = jwtVerifier.verify(token);
         }
-        else {
-            return false;
+        catch (Exception e) {
+            e.printStackTrace();
         }
+        return decodedJWT;
     }
 }
