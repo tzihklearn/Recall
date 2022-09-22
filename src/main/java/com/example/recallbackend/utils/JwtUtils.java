@@ -1,4 +1,4 @@
-package com.example.recallbackend.utils.JwtUtils;
+package com.example.recallbackend.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;

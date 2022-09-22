@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.recallbackend.mapper.ScheduleBoxMapper">
+
+    <select id="selectOutBoxByUserId" resultType="com.example.recallbackend.pojo.po.OutBoxGetAllPo">
+        select b.parent_id as userId, ui.name as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times,
+               GROUP_CONCAT(DISTINCT b.unfeedback_num) as unFeedbackNum
+        from schedule_box b
+            left join user_info ui on ui.user_id = b.parent_id
+            left join time_table tt on tt.schedule_box_id = b.id
+        where b.child_id = #{childId,jdbcType=INTEGER}
+            and b.time &gt;= #{time,jdbcType=BIGINT}
+            and tt.feedback = 0
+        group by b.parent_id
+    </select>
+</mapper>

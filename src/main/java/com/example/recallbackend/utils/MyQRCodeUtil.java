@@ -1,4 +1,4 @@
-package com.example.recallbackend.utils.QRCodeUtils;
+package com.example.recallbackend.utils;
 
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;

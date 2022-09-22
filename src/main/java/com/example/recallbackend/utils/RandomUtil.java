@@ -1,4 +1,4 @@
-package com.example.recallbackend.utils.RandomUtils;
+package com.example.recallbackend.utils;
 
 import java.util.Random;
 

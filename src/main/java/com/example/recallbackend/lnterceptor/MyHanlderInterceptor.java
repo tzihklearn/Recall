@@ -1,11 +1,10 @@
 package com.example.recallbackend.lnterceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.recallbackend.utils.JwtUtils.JwtUtils;
+import com.example.recallbackend.utils.JwtUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

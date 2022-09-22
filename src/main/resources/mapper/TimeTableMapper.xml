@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.recallbackend.mapper.TimeTableMapper">
+
+<!--    <select id="selectScheduleByParentId" resultType="com.example.recallbackend.pojo.po.TimeSchedulePo">-->
+<!--        select ui.name as name, tt.data as allData, s.data as videoData, s.video_url as videoUrl, s.time as times-->
+<!--        from schedule s-->
+<!--        left join user_info ui on ui.id = tt.child_id-->
+<!--        left join time_table tt on s.time_table_id = tt.id-->
+<!--        where tt.parent_id = #{parentId,jdbcType=INTEGER}-->
+<!--            and s.time between(#{startTime,jdbcType=BIGINT}, #{endTime,jdbcType=BIGINT})-->
+<!--    </select>-->
+    <select id="selectInboxAllByParentId" resultType="com.example.recallbackend.pojo.po.IndexGetAllPo">
+        select ui.user_id as userId, ui.name as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times
+        from schedule_box b
+        left join time_table tt on tt.schedule_box_id = b.id
+        left join user_info ui on ui.user_id = tt.child_id
+        where b.parent_id = #{parentId}
+            and b.time between #{startTime} and #{endTime}
+            and tt.feedback = 0
+        group by tt.child_id
+    </select>
+    <select id="selectVoiceByUserId" resultType="com.example.recallbackend.pojo.po.VoiceRecordingPo">
+        select s.data as data, s.video_url as videoUrl, tt.time as times, tt.state as state
+        from schedule_box b
+        left join time_table tt on tt.schedule_box_id = b.id
+        left join schedule s on s.id = tt.schedule_id
+        where b.id = #{scheduleBoxId}
+            and tt.time between #{startTime} and #{endTime}
+            and tt.feedback = 0
+        order by tt.time
+    </select>
+    <select id="selectMemorandumByUserId" resultType="com.example.recallbackend.pojo.po.MemorandumPo">
+        select s.data as data, s.video_url as videoUrl, tt.time as times, s.length as length
+        from time_table tt
+        left join schedule s on s.id = tt.schedule_id
+        where tt.parent_id = #{userId,jdbcType=INTEGER}
+            and tt.child_id = #{userId,jdbcType=INTEGER}
+            and tt.time &gt;= #{time,jdbcType=BIGINT}
+            and tt.feedback = 2
+    </select>
+
+</mapper>
