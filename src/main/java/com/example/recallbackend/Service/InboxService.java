@@ -10,6 +10,6 @@ public interface InboxService {
 
     CommonResult<List<InBoxGetAllResult>> getAll(Integer userId, Long time);
 
-    CommonResult<InboxDetailsResult> getDetails(Integer scheduleBoxId, Integer childId, Long time);
+    CommonResult<InboxDetailsResult> getDetails(Integer scheduleBoxId, Integer parentId, Integer childId, Long time);
 
 }

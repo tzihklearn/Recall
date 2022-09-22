@@ -25,7 +25,7 @@ spring:
 #        max-idle: 8
 
 lark-robot:
-  dev: true
+  dev: false
   url: https://open.feishu.cn/open-apis/bot/v2/hook/97006460-bc5f-42d1-a716-78cd92c8542a
   profile: dev
 logging:

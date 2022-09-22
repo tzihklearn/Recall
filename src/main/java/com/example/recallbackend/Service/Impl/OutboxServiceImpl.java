@@ -2,12 +2,16 @@ package com.example.recallbackend.Service.Impl;
 
 import com.example.recallbackend.Service.OutboxService;
 import com.example.recallbackend.mapper.ScheduleBoxMapper;
+import com.example.recallbackend.mapper.UserInfoMapper;
+import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.domain.UserInfo;
 import com.example.recallbackend.pojo.dto.result.OutBoxGetAllResult;
 import com.example.recallbackend.pojo.dto.result.OutboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.temporary.FeedBackResult;
 import com.example.recallbackend.pojo.dto.result.temporary.VoiceRecordingResult;
 import com.example.recallbackend.pojo.po.OutBoxGetAllPo;
+import com.example.recallbackend.pojo.po.RelationNamePo;
 import com.example.recallbackend.utils.TimeUtils;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,9 @@ public class OutboxServiceImpl implements OutboxService {
 
     @Resource
     private ScheduleBoxMapper scheduleBoxMapper;
+
+    @Resource
+    private UserRelationMapper userRelationMapper;
 
     @Override
     public CommonResult<List<OutBoxGetAllResult>> getAllOutBox(Integer userId) {
@@ -48,19 +55,22 @@ public class OutboxServiceImpl implements OutboxService {
     }
 
     @Override
-    public CommonResult<OutboxDetailsResult> getDetailsOutBox(Integer parentId, Integer childId) {
+    public CommonResult<OutboxDetailsResult> getDetailsOutBox(Integer parentId, Integer childId, Integer scheduleBoxId) {
 
         OutboxDetailsResult result = new OutboxDetailsResult();
 
-        List<VoiceRecordingResult> voiceRecordingResultList = new ArrayList<>();
+        List<VoiceRecordingResult> voiceRecordingResultList = scheduleBoxMapper.selectVoiceById(scheduleBoxId);
 
-        List<FeedBackResult> feedBackResultList = new ArrayList<>();
+        List<FeedBackResult> feedBackResultList = scheduleBoxMapper.selectFeedBackById(scheduleBoxId);
 
+        RelationNamePo relationNamePo = userRelationMapper.selectNameByUserId(parentId, childId);
 
+        result.setName(relationNamePo.getParentName());
 
+        result.setVoiceRecordingList(voiceRecordingResultList);
 
+        result.setFeedBackResultList(feedBackResultList);
 
-
-        return null;
+        return CommonResult.success(result);
     }
 }

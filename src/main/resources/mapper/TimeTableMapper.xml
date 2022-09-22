@@ -11,14 +11,14 @@
 <!--            and s.time between(#{startTime,jdbcType=BIGINT}, #{endTime,jdbcType=BIGINT})-->
 <!--    </select>-->
     <select id="selectInboxAllByParentId" resultType="com.example.recallbackend.pojo.po.IndexGetAllPo">
-        select ui.user_id as userId, ui.name as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times
+        select b.child_id as userId, GROUP_CONCAT(DISTINCT ur.child_name) as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times
         from schedule_box b
         left join time_table tt on tt.schedule_box_id = b.id
-        left join user_info ui on ui.user_id = tt.child_id
+        left join user_relation ur on ur.parent_id = tt.parent_id and ur.child_id = tt.child_id
         where b.parent_id = #{parentId}
             and b.time between #{startTime} and #{endTime}
             and tt.feedback = 0
-        group by tt.child_id
+        group by b.child_id
     </select>
     <select id="selectVoiceByUserId" resultType="com.example.recallbackend.pojo.po.VoiceRecordingPo">
         select s.data as data, s.video_url as videoUrl, tt.time as times, tt.state as state

@@ -2,6 +2,7 @@ package com.example.recallbackend.lnterceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.recallbackend.utils.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2022.09.13
  */
 @Component
+@Slf4j
 public class MyHanlderInterceptor implements HandlerInterceptor {
 
 //    @Resource
@@ -24,12 +26,19 @@ public class MyHanlderInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
 
+        if (token == null) {
+            log.info("没有token");
+            return false;
+        }
+
         DecodedJWT decode = JwtUtils.decode(token);
 
         if (decode != null) {
+            log.info("token校验通过");
             return true;
         }
         else {
+            log.info("token校验未通过");
             return false;
         }
 

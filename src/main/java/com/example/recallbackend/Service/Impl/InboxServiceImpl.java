@@ -2,13 +2,13 @@ package com.example.recallbackend.Service.Impl;
 
 import com.example.recallbackend.Service.InboxService;
 import com.example.recallbackend.mapper.TimeTableMapper;
-import com.example.recallbackend.mapper.UserInfoMapper;
+import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
-import com.example.recallbackend.pojo.domain.UserInfo;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.InBoxGetAllResult;
 import com.example.recallbackend.pojo.dto.result.temporary.VoiceRecordingResult;
 import com.example.recallbackend.pojo.po.IndexGetAllPo;
+import com.example.recallbackend.pojo.po.RelationNamePo;
 import com.example.recallbackend.pojo.po.VoiceRecordingPo;
 import com.example.recallbackend.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class InboxServiceImpl implements InboxService {
     private TimeTableMapper timeTableMapper;
 
     @Resource
-    private UserInfoMapper userInfoMapper;
+    private UserRelationMapper userRelationMapper;
 
     @Override
     public CommonResult<List<InBoxGetAllResult>> getAll(Integer userId, Long time) {
@@ -68,7 +68,7 @@ public class InboxServiceImpl implements InboxService {
     }
 
     @Override
-    public CommonResult<InboxDetailsResult> getDetails(Integer scheduleBoxId, Integer childId, Long time) {
+    public CommonResult<InboxDetailsResult> getDetails(Integer scheduleBoxId, Integer parentId, Integer childId, Long time) {
 
         InboxDetailsResult result = new InboxDetailsResult();
 
@@ -92,9 +92,8 @@ public class InboxServiceImpl implements InboxService {
                     TimeUtils.transformHhMm(voiceRecordingPo.getTimes()), voiceRecordingPo.getState()));
         }
 
-        UserInfo userInfo = userInfoMapper.selectAllByUserId(childId);
-
-        result.setName(userInfo.getName());
+        RelationNamePo relationNamePo = userRelationMapper.selectNameByUserId(parentId, childId);
+        result.setName(relationNamePo.getChildName());
         result.setVoiceRecordingList(voiceRecordingResults);
 
         return CommonResult.success(result);

@@ -31,7 +31,7 @@
     </select>
 
     <insert id="insertAllByUserId" parameterType="com.example.recallbackend.pojo.domain.UserInfo">
-        insert into user_info (name, phone, state)
+        insert into user_info (name, phone, role_model, state)
         values (#{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{roleModel,jdbcType=INTEGER}, #{state,javaType=INTEGER})
     </insert>
 

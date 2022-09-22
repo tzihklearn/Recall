@@ -6,8 +6,11 @@ import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.sms.v20190711.SmsClient;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
 
+@Slf4j
 public class SmsUtil {
 
     private static final String SecretId = "AKIDqVyFJ9lAMK5e094uXyBC2f4GH6i8MNBl";
@@ -65,9 +68,17 @@ public class SmsUtil {
         //签名内容，不是填签名id,见《创建短信签名和模版》小节
         sendSmsRequest.setSign(SignName);
         try {
-            SendSmsResponse sendSmsResponse= smsClient.SendSms(sendSmsRequest); //发送短信
-            System.out.println(sendSmsResponse.toString());
+            //发送短信
+            SendSmsResponse sendSmsResponse= smsClient.SendSms(sendSmsRequest);
+            String code = sendSmsResponse.getSendStatusSet()[0].getCode();
+            if (Objects.equals(code, "Ok")) {
+                log.info("发送手机短信成败");
+            }
+            else {
+                log.warn("发送手机短信失败");
+            }
         } catch (TencentCloudSDKException e) {
+            log.warn("发送手机短信失败");
             e.printStackTrace();
         }
 

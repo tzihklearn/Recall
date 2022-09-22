@@ -10,5 +10,5 @@ public interface OutboxService {
 
     CommonResult<List<OutBoxGetAllResult>> getAllOutBox(Integer userId);
 
-    CommonResult<OutboxDetailsResult> getDetailsOutBox(Integer parentId, Integer childId);
+    CommonResult<OutboxDetailsResult> getDetailsOutBox(Integer parentId, Integer childId, Integer scheduleBoxId);
 }

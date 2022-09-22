@@ -11,5 +11,6 @@ public class UserRelation {
     private Integer id;
     private Integer parentId;
     private Integer childId;
+    private String parentName;
     private String childName;
 }

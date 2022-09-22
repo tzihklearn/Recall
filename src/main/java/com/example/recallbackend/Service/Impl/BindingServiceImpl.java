@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,6 +34,14 @@ public class BindingServiceImpl implements BindingService {
 
     @Resource
     private RedisUtil redisUtil;
+
+    @Override
+    public CommonResult<List<String>> getAllBinding(Integer parentId) {
+
+        List<String> results = userRelationMapper.selectChildNamesByParentId(parentId);
+
+        return CommonResult.success(results);
+    }
 
     @Override
     public CommonResult<String> parentChangeName(NameParam nameParam) {

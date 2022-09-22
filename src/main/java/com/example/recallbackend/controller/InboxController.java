@@ -30,8 +30,9 @@ public class InboxController {
     }
 
     @GetMapping("/details")
-    public CommonResult<InboxDetailsResult> getDetails(@NotNull Integer scheduleBoxId, @NotNull Integer childId, @NotNull Long time) {
-        return inboxService.getDetails(scheduleBoxId, childId, time);
+    public CommonResult<InboxDetailsResult> getDetails(@NotNull Integer scheduleBoxId, @NotNull Integer parentId,
+                                                       @NotNull Integer childId, @NotNull Long time) {
+        return inboxService.getDetails(scheduleBoxId, parentId, childId, time);
     }
 
     

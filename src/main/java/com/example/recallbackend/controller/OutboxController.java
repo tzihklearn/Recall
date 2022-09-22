@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -29,8 +30,9 @@ public class OutboxController {
     }
 
     @GetMapping("/details")
-    public CommonResult<OutboxDetailsResult> getDetailsOutBox(Integer parentId, Integer childId) {
-        return null;
+    public CommonResult<OutboxDetailsResult> getDetailsOutBox(@NotNull Integer parentId, @NotNull Integer childId,
+                                                              @NotNull Integer scheduleBoxId) {
+        return outboxService.getDetailsOutBox(parentId, childId, scheduleBoxId);
     }
 
 }

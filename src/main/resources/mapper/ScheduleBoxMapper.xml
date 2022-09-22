@@ -3,14 +3,33 @@
 <mapper namespace="com.example.recallbackend.mapper.ScheduleBoxMapper">
 
     <select id="selectOutBoxByUserId" resultType="com.example.recallbackend.pojo.po.OutBoxGetAllPo">
-        select b.parent_id as userId, ui.name as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times,
+        select b.parent_id as userId, GROUP_CONCAT(DISTINCT ur.parent_name) as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times,
                GROUP_CONCAT(DISTINCT b.unfeedback_num) as unFeedbackNum
         from schedule_box b
-            left join user_info ui on ui.user_id = b.parent_id
+            left join user_relation ur on ur.parent_id = b.parent_id and ur.child_id = b.child_id
             left join time_table tt on tt.schedule_box_id = b.id
         where b.child_id = #{childId,jdbcType=INTEGER}
             and b.time &gt;= #{time,jdbcType=BIGINT}
             and tt.feedback = 0
         group by b.parent_id
+    </select>
+    <select id="selectVoiceById"
+            resultType="com.example.recallbackend.pojo.dto.result.temporary.VoiceRecordingResult">
+        select s.data as data, s.video_url as videoUrl, tt.time as times, tt.state as state
+        from schedule_box b
+            left join time_table tt on tt.schedule_box_id = b.id
+            left join schedule s on s.id = tt.schedule_id
+        where b.id = #{scheduleBoxId,jdbcType=INTEGER}
+            and tt.feedback = 0
+    </select>
+    <select id="selectFeedBackById"
+            resultType="com.example.recallbackend.pojo.dto.result.temporary.FeedBackResult">
+        select s.video_url as videoUrl, s.length as length
+        from schedule_box b
+                 left join time_table tt on tt.schedule_box_id = b.id
+                 left join schedule s on s.id = tt.schedule_id
+        where b.id = #{scheduleBoxId,jdbcType=INTEGER}
+          and tt.feedback = 1
+        order by tt.time
     </select>
 </mapper>

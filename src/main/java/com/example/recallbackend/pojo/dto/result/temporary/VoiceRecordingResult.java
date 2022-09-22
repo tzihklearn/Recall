@@ -15,7 +15,7 @@ public class VoiceRecordingResult {
 
     String videoUrl;
 
-    String time;
+    String times;
 
     Integer state;
 
