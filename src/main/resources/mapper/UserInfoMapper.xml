@@ -29,6 +29,11 @@
         from user_info
         where user_id = #{userId,jdbcType=INTEGER}
     </select>
+    <select id="selectUserIdByQRCode" resultType="java.lang.Integer">
+        select user_id
+        from user_info
+        where qr_code = #{qrCode,jdbcType=VARCHAR}
+    </select>
 
     <insert id="insertAllByUserId" parameterType="com.example.recallbackend.pojo.domain.UserInfo">
         insert into user_info (name, phone, role_model, state)
@@ -43,6 +48,11 @@
     <update id="updateNameByUserId">
         update user_info set
             name = #{name,jdbcType=VARCHAR}
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
+    <update id="updateQRCodeByUserIdInt">
+        update user_info set
+            qr_code = #{qrCode,jdbcType=VARCHAR}
         where user_id = #{userId,jdbcType=INTEGER}
     </update>
 </mapper>

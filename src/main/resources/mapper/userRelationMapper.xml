@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.recallbackend.mapper.UserRelationMapper">
+    <insert id="insertRelationByUserId">
+        insert into user_relation (parent_id, child_id, parent_name, child_name)
+        values (#{parentId,jdbcType=INTEGER}, #{childId,jdbcType=INTEGER},
+                (select name from user_info where user_id = #{parentId,jdbcType=INTEGER}),
+                (select name from user_info where user_id = #{childId,jdbcType=INTEGER}))
+    </insert>
 
     <update id="updateChildName">
         update user_relation
         set child_name = #{childName}
         where parent_id = #{parentId}
             and child_id = #{childId}
+    </update>
+    <update id="updateParentName">
+        update user_relation
+        set parent_name = #{parentName}
+        where parent_id = #{parentId}
+          and child_id = #{childId}
     </update>
     <delete id="deleteRelation">
         delete from user_relation
@@ -19,9 +31,20 @@
         where parent_id = #{parentId,jdbcType=INTEGER}
             and child_id = #{childId,jdbcType=INTEGER}
     </select>
-    <select id="selectChildNamesByParentId" resultType="java.lang.String">
-        select child_name as childName
+    <select id="selectChildByParentId" resultType="com.example.recallbackend.pojo.dto.result.UserResult">
+        select child_id as userId, child_name as UserName
         from user_relation
         where parent_id = #{parentId,jdbcType=INTEGER}
+    </select>
+    <select id="selectParentByChildId" resultType="com.example.recallbackend.pojo.dto.result.UserResult">
+        select child_id as userId, child_name as UserName
+        from user_relation
+        where child_id = #{childId,jdbcType=INTEGER}
+    </select>
+    <select id="selectParentIdAndNameByChildId"
+            resultType="com.example.recallbackend.pojo.dto.result.UserResult">
+        select parent_id, parent_name
+        from user_relation
+        where child_id = #{childId,jdbcType=INTEGER}
     </select>
 </mapper>

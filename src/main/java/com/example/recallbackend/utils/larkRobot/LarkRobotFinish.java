@@ -14,5 +14,9 @@ public class LarkRobotFinish implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         larkRobot.finish();
+        larkRobot.end();
     }
+
+
+
 }

@@ -9,5 +9,8 @@ import lombok.Data;
 @Data
 public class QRCodeParam {
 
+    Integer userId;
+
+    String key;
 
 }

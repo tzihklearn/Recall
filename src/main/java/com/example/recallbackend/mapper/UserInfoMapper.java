@@ -13,11 +13,13 @@ public interface UserInfoMapper {
 
     LoginSuccessResult selectLoginByUserId(Integer userId);
 
+    Integer selectUserIdByQRCode(String qrCode);
+
     int insertAllByUserId(UserInfo userInfo);
 
     int updateAllByUserId(UserInfo userInfo);
 
     int updateNameByUserId(Integer userId, String name);
 
-
+    int updateQRCodeByUserIdInt(Integer userId, String qrCode);
 }

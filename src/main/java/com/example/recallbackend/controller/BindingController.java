@@ -2,9 +2,10 @@ package com.example.recallbackend.controller;
 
 import com.example.recallbackend.Service.BindingService;
 import com.example.recallbackend.pojo.CommonResult;
-import com.example.recallbackend.pojo.dto.param.ChildNameParam;
+import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
 import com.example.recallbackend.pojo.dto.param.NameParam;
 import com.example.recallbackend.pojo.dto.param.UserIdParam;
+import com.example.recallbackend.pojo.dto.result.UserResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,9 +22,14 @@ public class BindingController {
 
     @Resource
     private BindingService bindingService;
+    
+    @GetMapping("/get-name")
+    public CommonResult<UserResult> getName(@NotNull Integer userId) {
+        return bindingService.getName(userId);
+    }
 
     @GetMapping("/all")
-    public CommonResult<List<String>> getAllBinding(@NotNull Integer parentId) {
+    public CommonResult<List<UserResult>> getAllBinding(@NotNull Integer parentId) {
         return bindingService.getAllBinding(parentId);
     }
 
@@ -33,13 +39,13 @@ public class BindingController {
     }
 
     @PostMapping("/child-name")
-    public CommonResult<String> setChildName(@RequestBody ChildNameParam childNameParam) {
-        return bindingService.setChildName(childNameParam);
+    public CommonResult<String> setChildName(@RequestBody ChangeNameParam changeNameParam) {
+        return bindingService.setChildName(changeNameParam);
     }
 
     @PostMapping("/unbinding")
-    public CommonResult<String> unbinding(@RequestBody ChildNameParam childNameParam) {
-        return bindingService.unbinding(childNameParam);
+    public CommonResult<String> unbinding(@RequestBody ChangeNameParam changeNameParam) {
+        return bindingService.unbinding(changeNameParam);
     }
 
     @PostMapping("/creat-qrcode")

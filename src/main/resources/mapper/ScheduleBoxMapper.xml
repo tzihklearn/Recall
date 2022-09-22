@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.recallbackend.mapper.ScheduleBoxMapper">
+    <insert id="insertScheduleByUserId">
+        insert into schedule_box (parent_id, child_id, time)
+        values (#{parentId}, #{childId}, #{dayTime})
+    </insert>
 
     <select id="selectOutBoxByUserId" resultType="com.example.recallbackend.pojo.po.OutBoxGetAllPo">
         select b.parent_id as userId, GROUP_CONCAT(DISTINCT ur.parent_name) as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times,
@@ -8,9 +12,12 @@
         from schedule_box b
             left join user_relation ur on ur.parent_id = b.parent_id and ur.child_id = b.child_id
             left join time_table tt on tt.schedule_box_id = b.id
-        where b.child_id = #{childId,jdbcType=INTEGER}
-            and b.time &gt;= #{time,jdbcType=BIGINT}
+        where b.child_id = #{childId}
+            and b.time &gt;= #{time}
             and tt.feedback = 0
+            <if test="keyWord != null">
+                and ur.parent_name like concat('%', #{keyWord}, '%')
+            </if>
         group by b.parent_id
     </select>
     <select id="selectVoiceById"
@@ -31,5 +38,14 @@
         where b.id = #{scheduleBoxId,jdbcType=INTEGER}
           and tt.feedback = 1
         order by tt.time
+    </select>
+    <select id="selectIdByUserIdAndTime" resultType="java.lang.Integer">
+        select id
+        from schedule_box
+        where parent_id = #{parentId}
+            and child_id = {childId}
+--             and time between #{startTime} and #{endTime}
+        order by id desc
+        limit 1
     </select>
 </mapper>

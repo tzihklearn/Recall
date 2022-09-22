@@ -5,9 +5,10 @@ import com.example.recallbackend.mapper.UserInfoMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.domain.UserInfo;
-import com.example.recallbackend.pojo.dto.param.ChildNameParam;
+import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
 import com.example.recallbackend.pojo.dto.param.NameParam;
 import com.example.recallbackend.pojo.dto.param.UserIdParam;
+import com.example.recallbackend.pojo.dto.result.UserResult;
 import com.example.recallbackend.utils.Md5Util;
 import com.example.recallbackend.utils.MyQRCodeUtil;
 import com.example.recallbackend.utils.RedisUtils.RedisUtil;
@@ -36,9 +37,22 @@ public class BindingServiceImpl implements BindingService {
     private RedisUtil redisUtil;
 
     @Override
-    public CommonResult<List<String>> getAllBinding(Integer parentId) {
+    public CommonResult<UserResult> getName(Integer userId) {
 
-        List<String> results = userRelationMapper.selectChildNamesByParentId(parentId);
+        UserResult result = new UserResult();
+
+        UserInfo userInfo = userInfoMapper.selectAllByUserId(userId);
+
+        result.setUserId(userId);
+        result.setName(userInfo.getName());
+
+        return CommonResult.success(result);
+    }
+
+    @Override
+    public CommonResult<List<UserResult>> getAllBinding(Integer parentId) {
+
+        List<UserResult> results = userRelationMapper.selectChildByParentId(parentId);
 
         return CommonResult.success(results);
     }
@@ -60,11 +74,15 @@ public class BindingServiceImpl implements BindingService {
     }
 
     @Override
-    public CommonResult<String> setChildName(ChildNameParam childNameParam) {
+    public CommonResult<String> setChildName(ChangeNameParam changeNameParam) {
 
 //        Integer userId = Integer.valueOf(request.getHeader("jwt"));
 
-        int i = userRelationMapper.updateChildName(childNameParam.getParentId(), childNameParam.getChildId(), childNameParam.getName());
+        if (changeNameParam.getName() == null) {
+            return CommonResult.fail("姓名不得为空");
+        }
+
+        int i = userRelationMapper.updateChildName(changeNameParam.getChangerId(), changeNameParam.getBeChangerId(), changeNameParam.getName());
         if (i == 1) {
             return CommonResult.success("更新成功");
         }
@@ -75,9 +93,9 @@ public class BindingServiceImpl implements BindingService {
     }
 
     @Override
-    public CommonResult<String> unbinding(ChildNameParam childNameParam) {
+    public CommonResult<String> unbinding(ChangeNameParam changeNameParam) {
 
-        int i = userRelationMapper.deleteRelation(childNameParam.getParentId(), childNameParam.getChildId());
+        int i = userRelationMapper.deleteRelation(changeNameParam.getChangerId(), changeNameParam.getBeChangerId());
 
         if (i == 0) {
             return CommonResult.success("解绑成功");
@@ -94,6 +112,13 @@ public class BindingServiceImpl implements BindingService {
 
         log.info("生成md5加密信息");
         String md5Str = Md5Util.getMD5Str(userInfo.getUserId().toString() + userInfo.getName());
+
+        log.info("将md5加密信息存入数据库");
+        int i = userInfoMapper.updateQRCodeByUserIdInt(userIdParam.getUserId(), md5Str);
+        if (i == 0) {
+            log.warn("md5加密数据存入数据库失败");
+            return CommonResult.fail("生成二维码失败");
+        }
 
         log.info("生成二维码base64字节数组");
         String qrCode = MyQRCodeUtil.getQRCode(md5Str);

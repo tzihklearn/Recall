@@ -2,28 +2,56 @@ package com.example.recallbackend.controller;
 
 import com.example.recallbackend.Service.ChildHomepageService;
 import com.example.recallbackend.pojo.CommonResult;
-import com.example.recallbackend.pojo.dto.param.MemorandumParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
+import com.example.recallbackend.pojo.dto.param.NameParam;
+import com.example.recallbackend.pojo.dto.param.QRCodeParam;
+import com.example.recallbackend.pojo.dto.result.UserResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author tzih
  * @date 2022.09.21
  */
 @RestController
-@RequestMapping("/child/homepage")
+@RequestMapping(value = "/child/homepage", method = {RequestMethod.GET, RequestMethod.POST})
 public class ChildHomepageController {
 
     @Resource
     private ChildHomepageService childHomepageService;
 
-    @PostMapping("/send-memorandum")
-    public CommonResult<String> sendMemorandum(@RequestBody MemorandumParam memorandumParam) {
-        return childHomepageService.sendMemorandum(memorandumParam);
+    @GetMapping("/get-name")
+    public CommonResult<UserResult> getName(@NotNull Integer userId) {
+        return childHomepageService.getName(userId);
     }
+
+    @PostMapping("/change-user-name")
+    public CommonResult<String> changeUserName(@RequestBody NameParam nameParam) {
+        return childHomepageService.changeUserName(nameParam);
+    }
+
+    @PostMapping("/binding")
+    public CommonResult<String> binding(@RequestBody QRCodeParam qrCodeParam) {
+        return childHomepageService.binding(qrCodeParam);
+    }
+
+    @GetMapping("/all")
+    public CommonResult<List<UserResult>> getAllBinding(@NotNull Integer userId) {
+        return childHomepageService.getAllBinding(userId);
+    }
+
+    @PostMapping("/parent-name")
+    public CommonResult<String> setParentName(@RequestBody ChangeNameParam changeNameParam) {
+        return childHomepageService.setParentName(changeNameParam);
+    }
+
+    @PostMapping("/unbinding")
+    public CommonResult<String> unbinding(@RequestBody ChangeNameParam changeNameParam) {
+        return childHomepageService.unbinding(changeNameParam);
+    }
+
 
 }

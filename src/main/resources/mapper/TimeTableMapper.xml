@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.recallbackend.mapper.TimeTableMapper">
+    <insert id="insertBySchedule">
+        insert into time_table (parent_id, child_id, schedule_id, time, data, schedule_box_id)
+        values (#{parentId}, #{childId},
+                <foreach collection="videoScheduleParamList" item="videoScheduleParam" open="(" close=")" separator=",">
+                    #{videoId}, #{time}, #{data}
+                </foreach>
+                , #{ScheduleBoxId})
+    </insert>
 
-<!--    <select id="selectScheduleByParentId" resultType="com.example.recallbackend.pojo.po.TimeSchedulePo">-->
+    <!--    <select id="selectScheduleByParentId" resultType="com.example.recallbackend.pojo.po.TimeSchedulePo">-->
 <!--        select ui.name as name, tt.data as allData, s.data as videoData, s.video_url as videoUrl, s.time as times-->
 <!--        from schedule s-->
 <!--        left join user_info ui on ui.id = tt.child_id-->

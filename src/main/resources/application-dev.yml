@@ -26,7 +26,7 @@ spring:
 
 lark-robot:
   dev: false
-  url: https://open.feishu.cn/open-apis/bot/v2/hook/97006460-bc5f-42d1-a716-78cd92c8542a
+  url: https://open.feishu.cn/open-apis/bot/v2/hook/3e2462d9-7539-470d-914e-8f1baeec87e9
   profile: dev
 logging:
   level:

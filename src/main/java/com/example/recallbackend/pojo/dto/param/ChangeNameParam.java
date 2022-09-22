@@ -10,16 +10,15 @@ import javax.validation.constraints.Pattern;
  * @date 2022.09.20
  */
 @Data
-public class ChildNameParam {
+public class ChangeNameParam {
 
     @NotNull
-    private Integer parentId;
+    private Integer changerId;
 
     @NotNull
-    private Integer childId;
+    private Integer beChangerId;
 
     @Pattern(regexp = "", message = "姓名不符合规范")
-    @NotNull
     private String name;
 
 }
