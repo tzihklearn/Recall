@@ -72,7 +72,7 @@ public class SmsUtil {
             SendSmsResponse sendSmsResponse= smsClient.SendSms(sendSmsRequest);
             String code = sendSmsResponse.getSendStatusSet()[0].getCode();
             if (Objects.equals(code, "Ok")) {
-                log.info("发送手机短信成败");
+                log.info("发送手机短信成功");
             }
             else {
                 log.warn("发送手机短信失败");

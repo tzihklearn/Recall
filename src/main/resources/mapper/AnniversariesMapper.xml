@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.recallbackend.mapper.AnniversariesMapper">
+
+    <insert id="insertAnniversary">
+        insert into anniversaries (parent_id, child_id, data, time)
+        values (#{parentId}, #{childId}, #{data}, #{time})
+    </insert>
+    <select id="selectAnniversaryPoByUserId" resultType="com.example.recallbackend.pojo.po.AnniversaryPo">
+        select data as data, time as time
+        from anniversaries
+        where child_id = #{userId}
+            and time &gt;= #{time}
+    </select>
+</mapper>

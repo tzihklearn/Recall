@@ -2,10 +2,8 @@ package com.example.recallbackend.controller;
 
 import com.example.recallbackend.Service.ChildHomepageService;
 import com.example.recallbackend.pojo.CommonResult;
-import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
-import com.example.recallbackend.pojo.dto.param.NameParam;
-import com.example.recallbackend.pojo.dto.param.QRCodeParam;
-import com.example.recallbackend.pojo.dto.param.RelationParam;
+import com.example.recallbackend.pojo.dto.param.*;
+import com.example.recallbackend.pojo.dto.result.AnniversaryResult;
 import com.example.recallbackend.pojo.dto.result.UserResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +50,16 @@ public class ChildHomepageController {
     @PostMapping("/unbinding")
     public CommonResult<String> unbinding(@RequestBody RelationParam relationParam) {
         return childHomepageService.unbinding(relationParam);
+    }
+
+    @PostMapping("/set-anniversary")
+    public CommonResult<String> setAnniversary(@RequestBody AnniversaryParam anniversaryParam) {
+        return childHomepageService.setAnniversary(anniversaryParam);
+    }
+
+    @GetMapping("/all-anniversary")
+    public CommonResult<List<AnniversaryResult>> getAnniversaries(Integer userId) {
+        return childHomepageService.getAnniversaries(userId);
     }
 
 

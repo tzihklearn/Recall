@@ -44,7 +44,7 @@ public class VoicePacketServiceImpl implements VoicePacketService {
             assert multipartFile != null;
             InputStream inputStream = multipartFile.getInputStream();
             log.info("以当前时间戳为文件名");
-            String key = TimeUtils.getNowTime() + ".wav";
+            String key = submitVideoParam.getUserId() + TimeUtils.getNowTime() + ".wav";
             String filesName = QiniuUtil.UploadFiles(inputStream, key);
 
             if (filesName == null) {

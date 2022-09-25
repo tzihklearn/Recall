@@ -32,7 +32,7 @@
             and child_id = #{childId,jdbcType=INTEGER}
     </select>
     <select id="selectChildByParentId" resultType="com.example.recallbackend.pojo.dto.result.UserResult">
-        select child_id as userId, child_name as UserName
+        select child_id as userId, child_name as name
         from user_relation
         where parent_id = #{parentId,jdbcType=INTEGER}
     </select>

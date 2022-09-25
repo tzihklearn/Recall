@@ -32,12 +32,12 @@ public class MemorandumServiceImpl implements MemorandumService {
         List<MemorandumPo> memorandumPos = timeTableMapper.selectMemorandumByUserId(userId, nowTime);
 
         for (MemorandumPo memorandumPo : memorandumPos) {
-            Integer lengthInt = memorandumPo.getLength();
+            long lengthInt = memorandumPo.getLength().longValue();
 
-            StringBuilder length = new StringBuilder(lengthInt / 60 + ":" + lengthInt%60);
+            String length = TimeUtils.transformMmSs(lengthInt);
 
             results.add(new MemorandumResult(memorandumPo.getData(), memorandumPo.getVideoUrl(),
-                    TimeUtils.transformNotSeconds(memorandumPo.getTimes()), length.toString()));
+                    TimeUtils.transformNotSeconds(memorandumPo.getTimes()), length));
 
         }
 

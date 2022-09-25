@@ -1,16 +1,23 @@
 package com.example.recallbackend.Service.Impl;
 
 import com.example.recallbackend.Service.ChildHomepageService;
+import com.example.recallbackend.mapper.AnniversariesMapper;
 import com.example.recallbackend.mapper.UserInfoMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.domain.UserInfo;
 import com.example.recallbackend.pojo.dto.param.*;
+import com.example.recallbackend.pojo.dto.result.AnniversaryResult;
 import com.example.recallbackend.pojo.dto.result.UserResult;
+import com.example.recallbackend.pojo.po.AnniversaryPo;
 import com.example.recallbackend.utils.RedisUtils.RedisUtil;
+import com.example.recallbackend.utils.TimeUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +25,7 @@ import java.util.List;
  * @date 2022.09.21
  */
 @Service
+@Slf4j
 public class ChildHomepageServiceImpl implements ChildHomepageService {
 
     @Resource
@@ -25,6 +33,9 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
 
     @Resource
     private UserRelationMapper userRelationMapper;
+
+    @Resource
+    private AnniversariesMapper anniversariesMapper;
 
     @Resource
     private RedisUtil redisUtil;
@@ -115,5 +126,41 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
         else {
             return CommonResult.fail("解绑失败");
         }
+    }
+
+    @Override
+    public CommonResult<String> setAnniversary(AnniversaryParam anniversaryParam) {
+
+        int i = anniversariesMapper.insertAnniversary(anniversaryParam);
+        if (i == 0) {
+            return CommonResult.fail("提交失败");
+        }
+        else {
+            return CommonResult.success("提交成功");
+        }
+
+    }
+
+    @Override
+    public CommonResult<List<AnniversaryResult>> getAnniversaries(Integer userId) {
+
+        List<AnniversaryResult> results = new ArrayList<>();
+
+        long dayTime = TimeUtils.getNowTime();
+
+        List<AnniversaryPo> anniversaryPoList = anniversariesMapper.selectAnniversaryPoByUserId(userId, dayTime);
+
+        for (AnniversaryPo anniversaryPo : anniversaryPoList) {
+            int day;
+            try {
+                day = TimeUtils.TimeSubDay(dayTime, anniversaryPo.getTime());
+            } catch (ParseException e) {
+                log.info("时间戳转换异常");
+                throw new RuntimeException(e);
+            }
+            results.add(new AnniversaryResult(anniversaryPo.getData(), TimeUtils.transform(anniversaryPo.getTime()), day));
+        }
+
+        return CommonResult.success(results);
     }
 }

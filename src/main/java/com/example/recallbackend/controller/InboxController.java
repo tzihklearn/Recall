@@ -2,12 +2,10 @@ package com.example.recallbackend.controller;
 
 import com.example.recallbackend.Service.InboxService;
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.dto.param.SubmitVideoParam;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.InBoxGetAllResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -18,7 +16,7 @@ import java.util.List;
  * @date 2022.09.21
  */
 @RestController
-@RequestMapping(value = "/parent/inbox", method = RequestMethod.GET)
+@RequestMapping(value = "/parent/inbox", method = {RequestMethod.GET, RequestMethod.POST})
 public class InboxController {
 
     @Resource
@@ -33,6 +31,11 @@ public class InboxController {
     public CommonResult<InboxDetailsResult> getDetails(@NotNull Integer scheduleBoxId, @NotNull Integer parentId,
                                                        @NotNull Integer childId, @NotNull Long time) {
         return inboxService.getDetails(scheduleBoxId, parentId, childId, time);
+    }
+
+    @PostMapping("/feedback")
+    public CommonResult<String> feedback(@RequestBody SubmitVideoParam submitVideoParam) {
+        return inboxService.feedback(submitVideoParam);
     }
 
     

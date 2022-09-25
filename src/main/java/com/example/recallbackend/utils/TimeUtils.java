@@ -116,6 +116,14 @@ public class TimeUtils {
         return df.format(date);
     }
 
+    public static String transformMmSs(long lt) {
+        lt *= 1000L;
+        SimpleDateFormat df = new SimpleDateFormat("mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        Date date = new Date(lt);
+        return df.format(date);
+    }
+
     /**
      * 要处理
      *

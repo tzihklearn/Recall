@@ -15,7 +15,7 @@ public class NameParam {
     @NotNull
     private Integer userId;
 
-    @Pattern(regexp = "", message = "姓名不符合规范")
+//    @Pattern(regexp = "", message = "姓名不符合规范")
     @NotNull
     private String name;
 
