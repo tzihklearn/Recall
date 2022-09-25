@@ -5,6 +5,7 @@ import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
 import com.example.recallbackend.pojo.dto.param.NameParam;
 import com.example.recallbackend.pojo.dto.param.QRCodeParam;
+import com.example.recallbackend.pojo.dto.param.RelationParam;
 import com.example.recallbackend.pojo.dto.result.UserResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,14 +44,14 @@ public class ChildHomepageController {
         return childHomepageService.getAllBinding(userId);
     }
 
-    @PostMapping("/parent-name")
+    @PostMapping("/change-parent-name")
     public CommonResult<String> setParentName(@RequestBody ChangeNameParam changeNameParam) {
         return childHomepageService.setParentName(changeNameParam);
     }
 
     @PostMapping("/unbinding")
-    public CommonResult<String> unbinding(@RequestBody ChangeNameParam changeNameParam) {
-        return childHomepageService.unbinding(changeNameParam);
+    public CommonResult<String> unbinding(@RequestBody RelationParam relationParam) {
+        return childHomepageService.unbinding(relationParam);
     }
 
 

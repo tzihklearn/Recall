@@ -1,15 +1,19 @@
 server:
   port: 38080
+  ssl:
+    key-store: classpath:tzih.work.jks
+    key-store-password: pr98m55km91778
+    keyStoreType: JKS
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3300/Recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-    username: root
-    password: 123456
-#    url: jdbc:mysql://43.142.146.75:3306/recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-#    username: recall
+#    url: jdbc:mysql://127.0.0.1:3300/Recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+#    username: root
 #    password: 123456
+    url: jdbc:mysql://43.142.146.75:3306/recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: recall
+    password: 123456
   redis:
     host: 43.142.146.75
     port: 6379

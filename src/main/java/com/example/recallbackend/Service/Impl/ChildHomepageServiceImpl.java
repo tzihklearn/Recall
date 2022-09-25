@@ -5,14 +5,10 @@ import com.example.recallbackend.mapper.UserInfoMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.domain.UserInfo;
-import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
-import com.example.recallbackend.pojo.dto.param.MemorandumParam;
-import com.example.recallbackend.pojo.dto.param.NameParam;
-import com.example.recallbackend.pojo.dto.param.QRCodeParam;
+import com.example.recallbackend.pojo.dto.param.*;
 import com.example.recallbackend.pojo.dto.result.UserResult;
 import com.example.recallbackend.utils.RedisUtils.RedisUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -110,8 +106,8 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
     }
 
     @Override
-    public CommonResult<String> unbinding(ChangeNameParam changeNameParam) {
-        int i = userRelationMapper.deleteRelation(changeNameParam.getChangerId(), changeNameParam.getBeChangerId());
+    public CommonResult<String> unbinding(RelationParam relationParam) {
+        int i = userRelationMapper.deleteRelation(relationParam.getParentId(), relationParam.getChildId());
 
         if (i == 0) {
             return CommonResult.success("解绑成功");

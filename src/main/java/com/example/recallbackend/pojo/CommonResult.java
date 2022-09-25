@@ -149,6 +149,10 @@ public class CommonResult<T> {
         return new CommonResult<T>(ResultEnum.AUTH_ERROR.getCode(), ResultEnum.AUTH_ERROR.getMessage(), null);
     }
 
+    public static <T> CommonResult<T> token_error() {
+        return new CommonResult<T>(ResultEnum.TOKEN_ERROR.getCode(), ResultEnum.TOKEN_ERROR.getMessage(), null);
+    }
+
     /**
      * 服务器执行错误
      */

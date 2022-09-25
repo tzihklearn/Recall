@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.recallbackend.mapper.ScheduleMapper">
+    <insert id="insertVideoByUserId">
+        insert into schedule (user_id, data, video_url, length)
+        VALUES (#{userId}, #{data}, #{videoUrl}, #{length})
+    </insert>
 
     <select id="selectVideoByUserId" resultType="com.example.recallbackend.pojo.dto.result.VideoPacketResult">
         select id as videoId, data as data, video_url as videoUrl, length as length

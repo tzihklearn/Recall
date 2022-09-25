@@ -9,6 +9,7 @@ import com.example.recallbackend.pojo.domain.UserInfo;
 import com.example.recallbackend.pojo.dto.param.PhoneParam;
 import com.example.recallbackend.pojo.dto.param.VerificationParam;
 import com.example.recallbackend.pojo.dto.result.LoginSuccessResult;
+import com.example.recallbackend.pojo.dto.result.LoginVerificationResult;
 import com.example.recallbackend.utils.JwtUtils;
 import com.example.recallbackend.utils.RandomUtil;
 import com.example.recallbackend.utils.RedisUtils.RedisUtil;
@@ -62,7 +63,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public CommonResult<LoginSuccessResult> loginVerification(VerificationParam verificationParam) {
+    public CommonResult<LoginVerificationResult> loginVerification(VerificationParam verificationParam) {
 
         log.info("验证验证码");
         Object verificationCode = redisUtil.get(verificationParam.getPhone() + "sms");
@@ -73,7 +74,7 @@ public class LoginServiceImpl implements LoginService {
         if ( !verificationParam.getVerificationCode().equals(verificationCode)) {
             return CommonResult.fail("验证码不存在或已过期");
         }
-        LoginSuccessResult result;
+        LoginVerificationResult result;
 
         //更新数据库
         log.info("更新数据库，注册用户");
@@ -93,10 +94,7 @@ public class LoginServiceImpl implements LoginService {
             }
             else {
                 Integer userIds = userInfoMapper.selectIdByPhone(verificationParam.getPhone());
-                setToken(userIds.toString(), verificationParam.getVerificationCode());
-
-                result = userInfoMapper.selectLoginByUserId(userIds);
-
+                result = getLoginVerificationResult(userIds, verificationParam);
                 return CommonResult.success(result);
             }
         }
@@ -108,10 +106,7 @@ public class LoginServiceImpl implements LoginService {
                 return CommonResult.fail("登陆失败");
             }
             else {
-                setToken(userId.toString(), verificationParam.getVerificationCode());
-
-                result = userInfoMapper.selectLoginByUserId(userId);
-
+                result = getLoginVerificationResult(userId, verificationParam);
                 return CommonResult.success(result);
             }
         }
@@ -133,18 +128,32 @@ public class LoginServiceImpl implements LoginService {
             return CommonResult.success(result);
         }
         else {
-            return CommonResult.success("登陆失败");
+            return CommonResult.fail("登陆失败");
         }
     }
 
-    private void setToken(String userId, String verificationCode) {
+    private String setToken(String userId, String verificationCode) {
         //生成token
         log.info("生成token");
         Map<String, String> payload = new HashMap<>();
         payload.put("userId", userId);
         payload.put("verificationCode", verificationCode);
-        String token = JwtUtils.getToken(payload);
-
-        response.setHeader("Authorization", token);
+        return JwtUtils.getToken(payload);
     }
+
+    private LoginVerificationResult getLoginVerificationResult(Integer userIds, VerificationParam verificationParam) {
+        String token = setToken(userIds.toString(), verificationParam.getVerificationCode());
+
+        LoginSuccessResult loginByUserId = userInfoMapper.selectLoginByUserId(userIds);
+
+        LoginVerificationResult result = new LoginVerificationResult();
+
+        result.setUserId(loginByUserId.getUserId());
+        result.setName(loginByUserId.getName());
+        result.setRoleModel(loginByUserId.getRoleModel());
+        result.setToken(token);
+
+        return result;
+    }
+
 }

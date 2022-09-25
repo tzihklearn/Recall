@@ -5,6 +5,7 @@ import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.dto.param.PhoneParam;
 import com.example.recallbackend.pojo.dto.param.VerificationParam;
 import com.example.recallbackend.pojo.dto.result.LoginSuccessResult;
+import com.example.recallbackend.pojo.dto.result.LoginVerificationResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
@@ -22,7 +23,7 @@ public class LoginController {
 
 
     @PostMapping("/phone-verification-sms")
-    public CommonResult<LoginSuccessResult> loginVerification(@RequestBody VerificationParam verificationParam) {
+    public CommonResult<LoginVerificationResult> loginVerification(@RequestBody VerificationParam verificationParam) {
         return loginService.loginVerification(verificationParam);
     }
 

@@ -4,6 +4,7 @@ import com.example.recallbackend.Service.BindingService;
 import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
 import com.example.recallbackend.pojo.dto.param.NameParam;
+import com.example.recallbackend.pojo.dto.param.RelationParam;
 import com.example.recallbackend.pojo.dto.param.UserIdParam;
 import com.example.recallbackend.pojo.dto.result.UserResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,14 +39,14 @@ public class BindingController {
         return bindingService.parentChangeName(nameParam);
     }
 
-    @PostMapping("/child-name")
+    @PostMapping("/change-child-name")
     public CommonResult<String> setChildName(@RequestBody ChangeNameParam changeNameParam) {
         return bindingService.setChildName(changeNameParam);
     }
 
     @PostMapping("/unbinding")
-    public CommonResult<String> unbinding(@RequestBody ChangeNameParam changeNameParam) {
-        return bindingService.unbinding(changeNameParam);
+    public CommonResult<String> unbinding(@RequestBody RelationParam relationParam) {
+        return bindingService.unbinding(relationParam);
     }
 
     @PostMapping("/creat-qrcode")

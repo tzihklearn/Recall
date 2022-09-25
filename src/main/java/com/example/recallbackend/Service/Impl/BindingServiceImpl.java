@@ -7,6 +7,7 @@ import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.domain.UserInfo;
 import com.example.recallbackend.pojo.dto.param.ChangeNameParam;
 import com.example.recallbackend.pojo.dto.param.NameParam;
+import com.example.recallbackend.pojo.dto.param.RelationParam;
 import com.example.recallbackend.pojo.dto.param.UserIdParam;
 import com.example.recallbackend.pojo.dto.result.UserResult;
 import com.example.recallbackend.utils.Md5Util;
@@ -93,9 +94,9 @@ public class BindingServiceImpl implements BindingService {
     }
 
     @Override
-    public CommonResult<String> unbinding(ChangeNameParam changeNameParam) {
+    public CommonResult<String> unbinding(RelationParam relationParam) {
 
-        int i = userRelationMapper.deleteRelation(changeNameParam.getChangerId(), changeNameParam.getBeChangerId());
+        int i = userRelationMapper.deleteRelation(relationParam.getParentId(), relationParam.getChildId());
 
         if (i == 0) {
             return CommonResult.success("解绑成功");
