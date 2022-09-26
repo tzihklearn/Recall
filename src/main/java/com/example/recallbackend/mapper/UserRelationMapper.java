@@ -18,7 +18,7 @@ public interface UserRelationMapper {
     int updateParentName(@Param("parentId") Integer parentId, @Param("childId") Integer childId,
                         @Param("childName") String ParentName);
 
-    int deleteRelation(Integer parentId, Integer child);
+    int deleteRelation(Integer parentId, Integer childId);
 
     RelationNamePo selectNameByUserId(Integer parentId, Integer childId);
 

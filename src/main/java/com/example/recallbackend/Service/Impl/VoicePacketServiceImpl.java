@@ -37,55 +37,13 @@ public class VoicePacketServiceImpl implements VoicePacketService {
     @Override
     public CommonResult<String> submitVideo(SubmitVideoParam submitVideoParam) {
 
-        MultipartFile multipartFile = multipartHttpServletRequest.getFile("video");
+        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartHttpServletRequest, submitVideoParam);
 
-        try {
-            log.info("将文件上传");
-            assert multipartFile != null;
-            InputStream inputStream = multipartFile.getInputStream();
-            log.info("以当前时间戳为文件名");
-            String key = submitVideoParam.getUserId() + TimeUtils.getNowTime() + ".wav";
-            String filesName = QiniuUtil.UploadFiles(inputStream, key);
-
-            if (filesName == null) {
-                log.warn("未获得文件名，文件上传失败");
-                return CommonResult.fail("文件上传失败");
-            }
-
-            log.info("获取音频播放链接");
-            String videoUrl = QiniuUtil.DownloadFiles(filesName);
-
-            log.info("获取音频文件帧率");
-            WaveFileReader waveFileReader = new WaveFileReader();
-
-            //
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-
-            AudioFileFormat audioFileFormat = waveFileReader.getAudioFileFormat(bufferedInputStream);
-
-            int length = audioFileFormat.getFrameLength();
-
-            VideoPo videoPo = new VideoPo();
-
-            videoPo.setUserId(submitVideoParam.getUserId());
-            videoPo.setData(submitVideoParam.getData());
-            videoPo.setVideoUrl(videoUrl);
-            videoPo.setLength(length);
-
-            int i = scheduleMapper.insertVideoByUserId(videoPo);
-
-            if (i == 0) {
-                return CommonResult.fail("提交失败");
-            }
-            else {
-                return CommonResult.success("提交成功");
-            }
-
-        } catch (IOException e) {
-            log.warn("数据流获取异常");
-            throw new RuntimeException(e);
-        } catch (UnsupportedAudioFileException e) {
-            throw new RuntimeException(e);
+        if (b) {
+            return CommonResult.success("提交成功");
+        }
+        else {
+            return CommonResult.fail("提交失败");
         }
 
     }

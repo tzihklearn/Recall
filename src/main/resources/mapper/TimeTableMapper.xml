@@ -9,6 +9,10 @@
                 </foreach>
                 , #{ScheduleBoxId})
     </insert>
+    <insert id="insertMemorandum">
+        insert into time_table (parent_id, child_id, schedule_id, time, data, schedule_box_id, feedback)
+        values (#{userId}, #{userId}, 0, #{time}, #{data}, 0, 2)
+    </insert>
 
     <!--    <select id="selectScheduleByParentId" resultType="com.example.recallbackend.pojo.po.TimeSchedulePo">-->
 <!--        select ui.name as name, tt.data as allData, s.data as videoData, s.video_url as videoUrl, s.time as times-->

@@ -30,6 +30,7 @@ public class JwtUtils {
         payload.forEach(builder::withClaim);
         // 指定过期时间和签名算法
         return builder.withExpiresAt(calendar.getTime()).sign(Algorithm.HMAC256(SECRET));
+
     }
 
 

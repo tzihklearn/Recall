@@ -104,8 +104,7 @@ public class LoginServiceImpl implements LoginService {
             int i = userInfoMapper.updateAllByUserId(userInfo);
             if (i == 0) {
                 return CommonResult.fail("登陆失败");
-            }
-            else {
+            } else {
                 result = getLoginVerificationResult(userId, verificationParam);
                 return CommonResult.success(result);
             }

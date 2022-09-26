@@ -2,11 +2,9 @@ package com.example.recallbackend.controller;
 
 import com.example.recallbackend.Service.MemorandumService;
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.dto.param.NewlyBuildParam;
 import com.example.recallbackend.pojo.dto.result.MemorandumResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -27,5 +25,11 @@ public class MemorandumController {
     public CommonResult<List<MemorandumResult>> getAllMemorandum(@NotNull Integer userId) {
         return memorandumService.getAllMemorandum(userId);
     }
+
+    @PostMapping("/newly-build")
+    public CommonResult<String> newlyBuildMemorandum(@RequestBody NewlyBuildParam newlyBuildParam) {
+        return memorandumService.newlyBuildMemorandum(newlyBuildParam);
+    }
+
 
 }

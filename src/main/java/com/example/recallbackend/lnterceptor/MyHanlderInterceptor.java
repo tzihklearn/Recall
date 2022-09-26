@@ -26,7 +26,6 @@ public class MyHanlderInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-
         String token = request.getHeader("Authorization");
 
         if (token == null) {
@@ -35,8 +34,10 @@ public class MyHanlderInterceptor implements HandlerInterceptor {
         }
 
         DecodedJWT decode = JwtUtils.decode(token);
+        String userId = request.getParameter("userId");
 
-        if (decode != null) {
+        if (decode != null && !decode.getClaims().get("userId").toString().equals(userId)) {
+
             log.info("token校验通过");
             return true;
         }
