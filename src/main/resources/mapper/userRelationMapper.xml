@@ -23,7 +23,7 @@
     <delete id="deleteRelation">
         delete from user_relation
         where parent_id = #{parentId,jdbcType=INTEGER}
-            and child_id #{childId,jdbcType=INTEGER}
+            and child_id = #{childId,jdbcType=INTEGER}
     </delete>
     <select id="selectNameByUserId" resultType="com.example.recallbackend.pojo.po.RelationNamePo">
         select parent_name as parentName, child_name as childName
