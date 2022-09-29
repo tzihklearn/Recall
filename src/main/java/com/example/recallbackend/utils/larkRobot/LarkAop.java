@@ -20,7 +20,7 @@ public class LarkAop {
 
     }
     @AfterThrowing(pointcut = "lark()", throwing = "exception")
-    public void larkRobot(JoinPoint point, Exception exception){
+    public void larkRobot(JoinPoint point, Exception exception) {
         if (larkRobot.getDev()) return;
         larkRobot.sendExceptionMessage(point, exception);
     }

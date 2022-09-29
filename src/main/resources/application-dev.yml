@@ -8,12 +8,12 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3300/Recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-#    username: root
-#    password: 123456
-    url: jdbc:mysql://43.142.146.75:3306/recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-    username: recall
+    url: jdbc:mysql://127.0.0.1:3300/Recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: root
     password: 123456
+#    url: jdbc:mysql://43.142.146.75:3306/recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+#    username: recall
+#    password: 123456
   redis:
     host: 43.142.146.75
     port: 6379
@@ -32,6 +32,10 @@ lark-robot:
   dev: false
   url: https://open.feishu.cn/open-apis/bot/v2/hook/3e2462d9-7539-470d-914e-8f1baeec87e9
   profile: dev
+#feishu-robot:
+#  hook_url: https://open.feishu.cn/open-apis/bot/v2/hook/0ec2dc49-0af4-4aae-a9a2-829f13a93b4f
+#  enabled: true  # 是否开启通知, 用于不同环境下的区分(开发, 测试, 生产), 默认为 true
+#  profile: dev
 logging:
   level:
     com.sipc.mmtbackend.mapper: debug

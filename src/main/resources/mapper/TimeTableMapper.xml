@@ -13,6 +13,11 @@
         insert into time_table (parent_id, child_id, schedule_id, time, data, schedule_box_id, feedback)
         values (#{userId}, #{userId}, 0, #{time}, #{data}, 0, 2)
     </insert>
+    <insert id="insertFeedbackBy">
+        insert into time_table (parent_id, child_id, schedule_id, schedule_box_id, state, feedback)
+        value (#{parentId,javaType=INTEGER}, #{childId,javaType=INTEGER}, #{scheduleId,javaType=INTEGER},
+               #{scheduleBoxId,javaType=INTEGER}, 0, 1 )
+    </insert>
 
     <!--    <select id="selectScheduleByParentId" resultType="com.example.recallbackend.pojo.po.TimeSchedulePo">-->
 <!--        select ui.name as name, tt.data as allData, s.data as videoData, s.video_url as videoUrl, s.time as times-->
@@ -25,9 +30,9 @@
     <select id="selectInboxAllByParentId" resultType="com.example.recallbackend.pojo.po.IndexGetAllPo">
         select b.child_id as userId, GROUP_CONCAT(DISTINCT ur.child_name) as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times
         from schedule_box b
+            right join user_relation ur on ur.id = b.relation_id
         left join time_table tt on tt.schedule_box_id = b.id
-        left join user_relation ur on ur.parent_id = tt.parent_id and ur.child_id = tt.child_id
-        where b.parent_id = #{parentId}
+        where ur.parent_id = #{parentId}
             and b.time between #{startTime} and #{endTime}
             and tt.feedback = 0
         group by b.child_id

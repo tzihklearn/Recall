@@ -5,10 +5,20 @@
         insert into schedule (user_id, data, video_url, length)
         VALUES (#{userId}, #{data}, #{videoUrl}, #{length})
     </insert>
+    <insert id="insertVideoNoDataByUserId">
+        insert into schedule (user_id, video_url, length)
+        VALUES (#{userId}, #{videoUrl}, #{length})
+    </insert>
 
     <select id="selectVideoByUserId" resultType="com.example.recallbackend.pojo.dto.result.VideoPacketResult">
         select id as videoId, data as data, video_url as videoUrl, length as length
         from schedule
         where user_id = #{userId}
+    </select>
+    <select id="selectIdByOrder" resultType="java.lang.Integer">
+        select id
+        from schedule
+        where user_id = #{userId}
+        order by id desc
     </select>
 </mapper>

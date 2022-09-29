@@ -2,6 +2,7 @@ package com.example.recallbackend.controller;
 
 import com.example.recallbackend.Service.InboxService;
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.dto.param.FeedbackParam;
 import com.example.recallbackend.pojo.dto.param.SubmitVideoParam;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.InBoxGetAllResult;
@@ -34,8 +35,8 @@ public class InboxController {
     }
 
     @PostMapping("/feedback")
-    public CommonResult<String> feedback(@RequestBody SubmitVideoParam submitVideoParam) {
-        return inboxService.feedback(submitVideoParam);
+    public CommonResult<String> feedback(@RequestBody FeedbackParam feedbackParam) {
+        return inboxService.feedback(feedbackParam);
     }
 
     

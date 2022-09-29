@@ -18,7 +18,11 @@ public interface TimeTableMapper {
                          @Param("ScheduleBoxId") Integer ScheduleBoxId,
                          @Param("videoScheduleParamList") List<VideoScheduleParam> videoScheduleParamList);
 
-    int insertMemorandum(@Param("newlyBuildParam") NewlyBuildParam newlyBuildParam, @Param("videoUrl") String videoUrl);
+    int insertMemorandum(@Param("newlyBuildParam") NewlyBuildParam newlyBuildParam);
+
+    int insertFeedbackBy(Integer parentId, Integer childId, Integer scheduleId, Integer scheduleBoxId);
+
+
 
 //    List<TimeSchedulePo> selectScheduleByParentId(Integer parentId, Long startTime, Long endTime);
 
@@ -29,7 +33,6 @@ public interface TimeTableMapper {
                                                @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
     List<MemorandumPo> selectMemorandumByUserId(Integer userId, Long time);
-
 
 
 

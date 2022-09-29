@@ -11,8 +11,10 @@ public interface ScheduleMapper {
 
     int insertVideoByUserId(VideoPo videoPo);
 
+    int insertVideoNoDataByUserId(VideoPo videoPo);
+
     List<VideoPacketResult> selectVideoByUserId(Integer userId);
 
 
-
+    Integer selectIdByOrder(Integer userId);
 }

@@ -131,8 +131,8 @@ public class OutboxServiceImpl implements OutboxService {
     @Override
     public CommonResult<List<VideoPacketResult>> getAllVideoPacket(Integer userId) {
 
-        List<VideoPacketResult> videoPacketResults = scheduleMapper.selectVideoByUserId(userId);
+        List<VideoPacketResult> results = scheduleMapper.selectVideoByUserId(userId);
 
-        return CommonResult.success(videoPacketResults);
+        return CommonResult.success(results);
     }
 }

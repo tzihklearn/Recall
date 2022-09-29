@@ -65,15 +65,15 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public CommonResult<LoginVerificationResult> loginVerification(VerificationParam verificationParam) {
 
-        log.info("验证验证码");
-        Object verificationCode = redisUtil.get(verificationParam.getPhone() + "sms");
-        if (verificationCode == null) {
-            return CommonResult.fail("验证码不存在或已过期");
-        }
-
-        if ( !verificationParam.getVerificationCode().equals(verificationCode)) {
-            return CommonResult.fail("验证码不存在或已过期");
-        }
+//        log.info("验证验证码");
+//        Object verificationCode = redisUtil.get(verificationParam.getPhone() + "sms");
+//        if (verificationCode == null) {
+//            return CommonResult.fail("验证码不存在或已过期");
+//        }
+//
+//        if ( !verificationParam.getVerificationCode().equals(verificationCode)) {
+//            return CommonResult.fail("验证码不存在或已过期");
+//        }
         LoginVerificationResult result;
 
         //更新数据库

@@ -5,6 +5,11 @@
         insert into schedule_box (parent_id, child_id, time)
         values (#{parentId}, #{childId}, #{dayTime})
     </insert>
+    <update id="updateUnFeedbackById">
+        update schedule_box
+        set unfeedback_num = unfeedback_num + 1
+        where id = #{id,javaType=INTEGER}
+    </update>
 
     <select id="selectOutBoxByUserId" resultType="com.example.recallbackend.pojo.po.OutBoxGetAllPo">
         select b.parent_id as userId, GROUP_CONCAT(DISTINCT ur.parent_name) as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times,
@@ -43,7 +48,7 @@
         select id
         from schedule_box
         where parent_id = #{parentId}
-            and child_id = {childId}
+            and child_id = #{childId}
 --             and time between #{startTime} and #{endTime}
         order by id desc
         limit 1

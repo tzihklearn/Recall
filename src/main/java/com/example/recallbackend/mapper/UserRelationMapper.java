@@ -28,6 +28,4 @@ public interface UserRelationMapper {
 
     List<UserResult> selectParentIdAndNameByChildId(Integer childId);
 
-
-
 }

@@ -1,11 +1,12 @@
 package com.example.recallbackend.Service.Impl;
 
 import com.example.recallbackend.Service.InboxService;
+import com.example.recallbackend.mapper.ScheduleBoxMapper;
 import com.example.recallbackend.mapper.ScheduleMapper;
 import com.example.recallbackend.mapper.TimeTableMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
-import com.example.recallbackend.pojo.dto.param.SubmitVideoParam;
+import com.example.recallbackend.pojo.dto.param.FeedbackParam;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.InBoxGetAllResult;
 import com.example.recallbackend.pojo.dto.result.temporary.VoiceRecordingResult;
@@ -39,6 +40,9 @@ public class InboxServiceImpl implements InboxService {
 
     @Resource
     private ScheduleMapper scheduleMapper;
+
+    @Resource
+    private ScheduleBoxMapper scheduleBoxMapper;
 
     @Resource
     private MultipartHttpServletRequest multipartHttpServletRequest;
@@ -110,16 +114,28 @@ public class InboxServiceImpl implements InboxService {
     }
 
     @Override
-    public CommonResult<String> feedback(SubmitVideoParam submitVideoParam) {
+    public CommonResult<String> feedback(FeedbackParam feedbackParam) {
 
-        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartHttpServletRequest, submitVideoParam);
+        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartHttpServletRequest, feedbackParam.getUserId(), null);
 
-        if (b) {
-            return CommonResult.success("提交成功");
-        }
-        else {
+        if (!b) {
             return CommonResult.fail("提交失败");
         }
 
+        Integer scheduleId = scheduleMapper.selectIdByOrder(feedbackParam.getUserId());
+
+        int i = timeTableMapper.insertFeedbackBy(feedbackParam.getUserId(), feedbackParam.getChildId(), scheduleId,
+                feedbackParam.getScheduleBoxId());
+
+        if (i == 0) {
+            return CommonResult.fail("提交失败");
+        }
+
+        int j = scheduleBoxMapper.updateUnFeedbackById(feedbackParam.getScheduleBoxId());
+        if (j == 0) {
+            return CommonResult.fail("提交失败");
+        }
+
+        return CommonResult.success("提交成功");
     }
 }

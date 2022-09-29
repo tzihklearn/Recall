@@ -1,6 +1,7 @@
 package com.example.recallbackend.Service;
 
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.dto.param.FeedbackParam;
 import com.example.recallbackend.pojo.dto.param.SubmitVideoParam;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.InBoxGetAllResult;
@@ -13,5 +14,5 @@ public interface InboxService {
 
     CommonResult<InboxDetailsResult> getDetails(Integer scheduleBoxId, Integer parentId, Integer childId, Long time);
 
-    CommonResult<String> feedback(SubmitVideoParam submitVideoParam);
+    CommonResult<String> feedback(FeedbackParam feedbackParam);
 }

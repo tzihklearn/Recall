@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.BufferedInputStream;
@@ -99,15 +98,15 @@ public class QiniuUtil {
     }
 
     public static boolean setVideo(ScheduleMapper scheduleMapper, MultipartHttpServletRequest multipartHttpServletRequest,
-                                   SubmitVideoParam submitVideoParam) {
-        MultipartFile multipartFile = multipartHttpServletRequest.getFile("video");
+                                   Integer userId, String data) {
+        MultipartFile multipartFile = multipartHttpServletRequest.getFile("file");
 
         try {
             log.info("将文件上传");
             assert multipartFile != null;
             InputStream inputStream = multipartFile.getInputStream();
             log.info("以当前时间戳为文件名");
-            String key = submitVideoParam.getUserId() + TimeUtils.getNowTime() + ".wav";
+            String key = userId + TimeUtils.getNowTime() + ".wav";
             String filesName = QiniuUtil.UploadFiles(inputStream, key);
 
             if (filesName == null) {
@@ -122,86 +121,95 @@ public class QiniuUtil {
             WaveFileReader waveFileReader = new WaveFileReader();
 
             //
+            log.info("获取音频文件播放时间");
             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
 
             AudioFileFormat audioFileFormat = waveFileReader.getAudioFileFormat(bufferedInputStream);
 
             int length = (int) ( (double)audioFileFormat.getFrameLength() / audioFileFormat.getFormat().getFrameRate());
 
+            log.info("将音频文件信息放入数据库");
             VideoPo videoPo = new VideoPo();
 
-            videoPo.setUserId(submitVideoParam.getUserId());
-            videoPo.setData(submitVideoParam.getData());
+            videoPo.setUserId(userId);
+            videoPo.setData(data);
             videoPo.setVideoUrl(videoUrl);
             videoPo.setLength(length);
 
-            int i = scheduleMapper.insertVideoByUserId(videoPo);
-
-            return i != 0;
-
-        } catch (IOException e) {
-            log.warn("数据流获取异常");
-            throw new RuntimeException(e);
-        } catch (UnsupportedAudioFileException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static boolean Memorandum(ScheduleMapper scheduleMapper, MultipartHttpServletRequest multipartHttpServletRequest,
-                              NewlyBuildParam newlyBuildParam, TimeTableMapper timeTableMapper) {
-        SubmitVideoParam submitVideoParam = new SubmitVideoParam();
-
-        submitVideoParam.setUserId(newlyBuildParam.getUserId());
-        submitVideoParam.setData(newlyBuildParam.getData());
-
-        MultipartFile multipartFile = multipartHttpServletRequest.getFile("video");
-
-        String videoUrl;
-        try {
-            log.info("将文件上传");
-            assert multipartFile != null;
-            InputStream inputStream = multipartFile.getInputStream();
-            log.info("以当前时间戳为文件名");
-            String key = submitVideoParam.getUserId() + TimeUtils.getNowTime() + ".wav";
-            String filesName = QiniuUtil.UploadFiles(inputStream, key);
-
-            if (filesName == null) {
-                log.warn("未获得文件名，文件上传失败");
-                return false;
+            int r;
+            if (data != null) {
+                r = scheduleMapper.insertVideoByUserId(videoPo);
+            }
+            else {
+                r = scheduleMapper.insertVideoNoDataByUserId(videoPo);
             }
 
-            log.info("获取音频播放链接");
-            videoUrl = QiniuUtil.DownloadFiles(filesName);
-
-            log.info("获取音频文件帧率");
-            WaveFileReader waveFileReader = new WaveFileReader();
-
-            //
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-
-            AudioFileFormat audioFileFormat = waveFileReader.getAudioFileFormat(bufferedInputStream);
-
-            int length = (int) ( (double)audioFileFormat.getFrameLength() / audioFileFormat.getFormat().getFrameRate());
-
-            VideoPo videoPo = new VideoPo();
-
-            videoPo.setUserId(submitVideoParam.getUserId());
-            videoPo.setData(submitVideoParam.getData());
-            videoPo.setVideoUrl(videoUrl);
-            videoPo.setLength(length);
-
-            int i = scheduleMapper.insertVideoByUserId(videoPo);
-
+            return r != 0;
 
         } catch (IOException e) {
             log.warn("数据流获取异常");
             throw new RuntimeException(e);
         } catch (UnsupportedAudioFileException e) {
+            log.info("文件不包含可识别文件类型和格式的有效数据");
             throw new RuntimeException(e);
         }
-        int i = timeTableMapper.insertMemorandum(newlyBuildParam, videoUrl);
-
-        return i != 0;
     }
+
+//    public static boolean Memorandum(ScheduleMapper scheduleMapper, MultipartHttpServletRequest multipartHttpServletRequest,
+//                              NewlyBuildParam newlyBuildParam, TimeTableMapper timeTableMapper) {
+//        SubmitVideoParam submitVideoParam = new SubmitVideoParam();
+//
+//        submitVideoParam.setUserId(newlyBuildParam.getUserId());
+//        submitVideoParam.setData(newlyBuildParam.getData());
+//
+//        MultipartFile multipartFile = multipartHttpServletRequest.getFile("video");
+//
+//        String videoUrl;
+//        try {
+//            log.info("将文件上传");
+//            assert multipartFile != null;
+//            InputStream inputStream = multipartFile.getInputStream();
+//            log.info("以当前时间戳为文件名");
+//            String key = submitVideoParam.getUserId() + TimeUtils.getNowTime() + ".wav";
+//            String filesName = QiniuUtil.UploadFiles(inputStream, key);
+//
+//            if (filesName == null) {
+//                log.warn("未获得文件名，文件上传失败");
+//                return false;
+//            }
+//
+//            log.info("获取音频播放链接");
+//            videoUrl = QiniuUtil.DownloadFiles(filesName);
+//
+//            log.info("获取音频文件帧率");
+//            WaveFileReader waveFileReader = new WaveFileReader();
+//
+//            //
+//            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+//
+//            AudioFileFormat audioFileFormat = waveFileReader.getAudioFileFormat(bufferedInputStream);
+//
+//            int length = (int) ( (double)audioFileFormat.getFrameLength() / audioFileFormat.getFormat().getFrameRate());
+//
+//            VideoPo videoPo = new VideoPo();
+//
+//            videoPo.setUserId(submitVideoParam.getUserId());
+//            videoPo.setData(submitVideoParam.getData());
+//            videoPo.setVideoUrl(videoUrl);
+//            videoPo.setLength(length);
+//
+//            int i = scheduleMapper.insertVideoByUserId(videoPo);
+//
+//
+//        } catch (IOException e) {
+//            log.warn("数据流获取异常");
+//            throw new RuntimeException(e);
+//        } catch (UnsupportedAudioFileException e) {
+//            throw new RuntimeException(e);
+//        }
+//        int i = timeTableMapper.insertMemorandum(newlyBuildParam, videoUrl);
+//
+//        return i != 0;
+//    }
 
 }

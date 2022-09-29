@@ -10,6 +10,7 @@ import com.example.recallbackend.pojo.dto.result.MemorandumResult;
 import com.example.recallbackend.pojo.po.MemorandumPo;
 import com.example.recallbackend.utils.QiniuUtil;
 import com.example.recallbackend.utils.TimeUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -22,6 +23,7 @@ import java.util.List;
  * @date 2022.09.21
  */
 @Service
+@Slf4j
 public class MemorandumServiceImpl implements MemorandumService {
 
     @Resource
@@ -63,17 +65,20 @@ public class MemorandumServiceImpl implements MemorandumService {
         submitVideoParam.setUserId(newlyBuildParam.getUserId());
         submitVideoParam.setData(newlyBuildParam.getData());
 
-        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartHttpServletRequest, submitVideoParam);
+        log.info("上传文件");
+        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartHttpServletRequest, submitVideoParam.getUserId(),
+                submitVideoParam.getData());
         if (!b) {
             return CommonResult.fail("提交失败");
         }
 
-        boolean memorandum = QiniuUtil.Memorandum(scheduleMapper, multipartHttpServletRequest, newlyBuildParam, timeTableMapper);
-        if (memorandum) {
-            return CommonResult.success();
+        log.info("设置备忘录");
+        int r = timeTableMapper.insertMemorandum(newlyBuildParam);
+        if (r == 1) {
+            return CommonResult.success("设置成功");
         }
         else {
-            return CommonResult.fail();
+            return CommonResult.fail("设置失败");
         }
 
     }

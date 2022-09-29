@@ -12,6 +12,11 @@ import java.util.List;
 @Mapper
 public interface ScheduleBoxMapper {
 
+    int insertScheduleByUserId(@Param("parentId") Integer parentId, @Param("childId") Integer childId,
+                               @Param("dayTime") Long time);
+
+    int updateUnFeedbackById(Integer Id);
+
     List<OutBoxGetAllPo> selectOutBoxByUserId(@Param("childId") Integer childId, @Param("keyWord") String keyWord,
                                               @Param("time") Long time);
 
@@ -23,7 +28,5 @@ public interface ScheduleBoxMapper {
 //                                    @Param("startTime") Long startTime, @Param("endTime") Long endTime);
     Integer selectIdByUserIdAndTime(@Param("parentId") Integer parentId, @Param("childId") Integer childId);
 
-    int insertScheduleByUserId(@Param("parentId") Integer parentId, @Param("childId") Integer childId,
-                               @Param("dayTime") Long time);
 
 }
