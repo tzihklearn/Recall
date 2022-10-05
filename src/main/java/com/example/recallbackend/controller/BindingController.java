@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2022.09.19
  */
 @RestController
-@RequestMapping(value = "/parent/binding", method = {RequestMethod.POST, RequestMethod.GET})
+@RequestMapping(value = "/parent/binding")
 public class BindingController {
 
     @Resource

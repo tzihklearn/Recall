@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * @date 2022.09.23
  */
 @RestController
-@RequestMapping(value = "/child/voice-packet", method = RequestMethod.GET)
+@RequestMapping(value = "/child/voice-packet")
 public class VoicePacketController {
 
     @Resource
@@ -25,6 +25,5 @@ public class VoicePacketController {
     public CommonResult<String> submitVideo(@RequestBody SubmitVideoParam submitVideoParam) {
         return voicePacketService.submitVideo(submitVideoParam);
     }
-
 
 }

@@ -20,5 +20,6 @@
         from schedule
         where user_id = #{userId}
         order by id desc
+        limit 1
     </select>
 </mapper>

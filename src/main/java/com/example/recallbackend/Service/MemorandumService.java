@@ -10,6 +10,6 @@ public interface MemorandumService {
 
     CommonResult<List<MemorandumResult>> getAllMemorandum(Integer userId);
 
-    CommonResult<String> newlyBuildMemorandum(NewlyBuildParam newlyBuildParam);
+    CommonResult<String> newlyBuildMemorandum(Integer userId, String data, Long time, Integer length);
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2022.09.21
  */
 @RestController
-@RequestMapping(value = "/parent/memorandum", method = RequestMethod.GET)
+@RequestMapping(value = "/parent/memorandum")
 public class MemorandumController {
 
     @Resource
@@ -27,8 +27,8 @@ public class MemorandumController {
     }
 
     @PostMapping("/newly-build")
-    public CommonResult<String> newlyBuildMemorandum(@RequestBody NewlyBuildParam newlyBuildParam) {
-        return memorandumService.newlyBuildMemorandum(newlyBuildParam);
+    public CommonResult<String> newlyBuildMemorandum(Integer userId, String data, Long time, Integer length) {
+        return memorandumService.newlyBuildMemorandum(userId, data, time, length);
     }
 
 

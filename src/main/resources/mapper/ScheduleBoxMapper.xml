@@ -15,7 +15,7 @@
         select b.parent_id as userId, GROUP_CONCAT(DISTINCT ur.parent_name) as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times,
                GROUP_CONCAT(DISTINCT b.unfeedback_num) as unFeedbackNum
         from schedule_box b
-            left join user_relation ur on ur.parent_id = b.parent_id and ur.child_id = b.child_id
+            right join user_relation ur on ur.id = b.relation_id
             left join time_table tt on tt.schedule_box_id = b.id
         where b.child_id = #{childId}
             and b.time &gt;= #{time}

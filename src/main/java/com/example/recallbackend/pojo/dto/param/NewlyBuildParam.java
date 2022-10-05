@@ -1,5 +1,6 @@
 package com.example.recallbackend.pojo.dto.param;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Data;
  * @date 2022.09.26
  */
 @Data
+@AllArgsConstructor
 public class NewlyBuildParam {
 
     Integer userId;

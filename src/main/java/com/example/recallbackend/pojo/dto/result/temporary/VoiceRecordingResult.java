@@ -11,6 +11,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class VoiceRecordingResult {
 
+    Integer voiceId;
+
     String data;
 
     String videoUrl;

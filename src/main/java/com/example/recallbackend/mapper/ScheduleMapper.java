@@ -15,6 +15,5 @@ public interface ScheduleMapper {
 
     List<VideoPacketResult> selectVideoByUserId(Integer userId);
 
-
     Integer selectIdByOrder(Integer userId);
 }

@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class VoiceRecordingPo {
 
+    Integer voiceId;
+
     String data;
 
     String videoUrl;

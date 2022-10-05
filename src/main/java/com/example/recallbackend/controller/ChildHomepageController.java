@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2022.09.21
  */
 @RestController
-@RequestMapping(value = "/child/homepage", method = {RequestMethod.GET, RequestMethod.POST})
+@RequestMapping(value = "/child/homepage")
 public class ChildHomepageController {
 
     @Resource

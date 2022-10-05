@@ -8,12 +8,12 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3300/Recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-    username: root
-    password: 123456
-#    url: jdbc:mysql://43.142.146.75:3306/recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-#    username: recall
+#    url: jdbc:mysql://127.0.0.1:3300/Recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+#    username: root
 #    password: 123456
+    url: jdbc:mysql://43.142.146.75:3306/recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: recall
+    password: 123456
   redis:
     host: 43.142.146.75
     port: 6379
@@ -27,6 +27,14 @@ spring:
 #        max-wait: -1
 #        # 连接池中的最大空闲连接
 #        max-idle: 8
+  servlet:
+    multipart:
+      enabled: true
+      # 设置 上传文件的大小
+      max-file-size: 10MB
+      # 设置 整个请求的大小
+      max-request-size: 15MB
+
 
 lark-robot:
   dev: false

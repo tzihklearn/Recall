@@ -37,7 +37,8 @@ public class VoicePacketServiceImpl implements VoicePacketService {
     @Override
     public CommonResult<String> submitVideo(SubmitVideoParam submitVideoParam) {
 
-        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartHttpServletRequest, submitVideoParam.getUserId(),
+        MultipartFile multipartFile = multipartHttpServletRequest.getFile("file");
+        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartFile, submitVideoParam.getUserId(),
                 submitVideoParam.getData());
 
         if (b) {

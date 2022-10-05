@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2022.09.21
  */
 @RestController
-@RequestMapping(value = "/child/outbox", method = {RequestMethod.GET, RequestMethod.POST})
+@RequestMapping(value = "/child/outbox")
 public class OutboxController {
 
     @Resource

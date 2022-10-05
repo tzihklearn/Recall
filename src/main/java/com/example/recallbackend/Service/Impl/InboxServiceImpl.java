@@ -6,7 +6,6 @@ import com.example.recallbackend.mapper.ScheduleMapper;
 import com.example.recallbackend.mapper.TimeTableMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
-import com.example.recallbackend.pojo.dto.param.FeedbackParam;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.InBoxGetAllResult;
 import com.example.recallbackend.pojo.dto.result.temporary.VoiceRecordingResult;
@@ -17,9 +16,12 @@ import com.example.recallbackend.utils.QiniuUtil;
 import com.example.recallbackend.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,8 @@ public class InboxServiceImpl implements InboxService {
     private ScheduleBoxMapper scheduleBoxMapper;
 
     @Resource
-    private MultipartHttpServletRequest multipartHttpServletRequest;
+    private HttpServletRequest httpServletRequest;
+//    private MultipartHttpServletRequest multipartHttpServletRequest;
 
     @Override
     public CommonResult<List<InBoxGetAllResult>> getAll(Integer userId, Long time) {
@@ -102,7 +105,7 @@ public class InboxServiceImpl implements InboxService {
         List<VoiceRecordingPo> voiceRecordingPos = timeTableMapper.selectVoiceByUserId(scheduleBoxId, time, dayTimeEnd);
 
         for (VoiceRecordingPo voiceRecordingPo : voiceRecordingPos) {
-            voiceRecordingResults.add(new VoiceRecordingResult(voiceRecordingPo.getData(), voiceRecordingPo.getVideoUrl(),
+            voiceRecordingResults.add(new VoiceRecordingResult(voiceRecordingPo.getVoiceId(), voiceRecordingPo.getData(), voiceRecordingPo.getVideoUrl(),
                     TimeUtils.transformHhMm(voiceRecordingPo.getTimes()), voiceRecordingPo.getState()));
         }
 
@@ -114,28 +117,43 @@ public class InboxServiceImpl implements InboxService {
     }
 
     @Override
-    public CommonResult<String> feedback(FeedbackParam feedbackParam) {
+    public CommonResult<String> feedback(Integer parentId, Integer childId, Integer scheduleBoxId, Integer length) {
 
-        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartHttpServletRequest, feedbackParam.getUserId(), null);
+//        MultipartFile multipartFile = multipartHttpServletRequest.getFile("file");
+        StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
+        MultipartHttpServletRequest multipartHttpServletRequest = multipartResolver.resolveMultipart(httpServletRequest);
+        MultipartFile multipartFile = multipartHttpServletRequest.getFile("file");
+        assert multipartFile != null;
+        boolean b = QiniuUtil.setVideo(scheduleMapper, multipartFile, parentId, null, length);
 
         if (!b) {
             return CommonResult.fail("提交失败");
         }
 
-        Integer scheduleId = scheduleMapper.selectIdByOrder(feedbackParam.getUserId());
+        Integer scheduleId = scheduleMapper.selectIdByOrder(parentId);
 
-        int i = timeTableMapper.insertFeedbackBy(feedbackParam.getUserId(), feedbackParam.getChildId(), scheduleId,
-                feedbackParam.getScheduleBoxId());
+        int i = timeTableMapper.insertFeedbackBy(parentId, childId, scheduleId, scheduleBoxId);
 
         if (i == 0) {
             return CommonResult.fail("提交失败");
         }
 
-        int j = scheduleBoxMapper.updateUnFeedbackById(feedbackParam.getScheduleBoxId());
+        int j = scheduleBoxMapper.updateUnFeedbackById(scheduleBoxId);
         if (j == 0) {
             return CommonResult.fail("提交失败");
         }
 
         return CommonResult.success("提交成功");
+    }
+
+    @Override
+    public CommonResult<String> confirm(Integer userId, Integer voiceId) {
+
+        int i = timeTableMapper.updateState(userId, voiceId);
+        if (i == 0) {
+            return CommonResult.fail("更新失败");
+        }
+
+        return CommonResult.success("更新成功");
     }
 }

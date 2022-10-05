@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping(value = "/login", method = RequestMethod.POST)
+@RequestMapping(value = "/login")
 public class LoginController {
 
     @Resource

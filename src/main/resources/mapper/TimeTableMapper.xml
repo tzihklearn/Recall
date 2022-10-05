@@ -11,13 +11,20 @@
     </insert>
     <insert id="insertMemorandum">
         insert into time_table (parent_id, child_id, schedule_id, time, data, schedule_box_id, feedback)
-        values (#{userId}, #{userId}, 0, #{time}, #{data}, 0, 2)
+        values (#{newlyBuildParam.userId}, #{newlyBuildParam.userId}, #{scheduleId}, #{newlyBuildParam.time},
+                #{newlyBuildParam.data}, 0, 2)
     </insert>
     <insert id="insertFeedbackBy">
         insert into time_table (parent_id, child_id, schedule_id, schedule_box_id, state, feedback)
         value (#{parentId,javaType=INTEGER}, #{childId,javaType=INTEGER}, #{scheduleId,javaType=INTEGER},
                #{scheduleBoxId,javaType=INTEGER}, 0, 1 )
     </insert>
+    <update id="updateState">
+        update time_table
+        set state = 1
+        where id = #{id,javaType=INTEGER}
+            and parent_id = #{parentId,javaType=INTEGER}
+    </update>
 
     <!--    <select id="selectScheduleByParentId" resultType="com.example.recallbackend.pojo.po.TimeSchedulePo">-->
 <!--        select ui.name as name, tt.data as allData, s.data as videoData, s.video_url as videoUrl, s.time as times-->
@@ -38,7 +45,7 @@
         group by b.child_id
     </select>
     <select id="selectVoiceByUserId" resultType="com.example.recallbackend.pojo.po.VoiceRecordingPo">
-        select s.data as data, s.video_url as videoUrl, tt.time as times, tt.state as state
+        select tt.id as voiceId, s.data as data, s.video_url as videoUrl, tt.time as times, tt.state as state
         from schedule_box b
         left join time_table tt on tt.schedule_box_id = b.id
         left join schedule s on s.id = tt.schedule_id

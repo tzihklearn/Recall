@@ -34,9 +34,9 @@ public class MyHanlderInterceptor implements HandlerInterceptor {
         }
 
         DecodedJWT decode = JwtUtils.decode(token);
-        String userId = request.getParameter("userId");
-
-        if (decode != null && !decode.getClaims().get("userId").toString().equals(userId)) {
+//        String userId = request.getParameter("userId");
+//&& !decode.getClaims().get("userId").toString().equals(userId)
+        if (decode != null ) {
 
             log.info("token校验通过");
             return true;

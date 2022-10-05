@@ -14,5 +14,7 @@ public interface InboxService {
 
     CommonResult<InboxDetailsResult> getDetails(Integer scheduleBoxId, Integer parentId, Integer childId, Long time);
 
-    CommonResult<String> feedback(FeedbackParam feedbackParam);
+    CommonResult<String> feedback(Integer parentId, Integer childId, Integer scheduleBoxId, Integer length);
+
+    CommonResult<String> confirm(Integer userId, Integer voiceId);
 }

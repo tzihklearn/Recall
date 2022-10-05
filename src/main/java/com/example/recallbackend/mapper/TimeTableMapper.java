@@ -18,11 +18,11 @@ public interface TimeTableMapper {
                          @Param("ScheduleBoxId") Integer ScheduleBoxId,
                          @Param("videoScheduleParamList") List<VideoScheduleParam> videoScheduleParamList);
 
-    int insertMemorandum(@Param("newlyBuildParam") NewlyBuildParam newlyBuildParam);
+    int insertMemorandum(@Param("newlyBuildParam") NewlyBuildParam newlyBuildParam, @Param("scheduleId") Integer scheduleId);
 
     int insertFeedbackBy(Integer parentId, Integer childId, Integer scheduleId, Integer scheduleBoxId);
 
-
+    int updateState(Integer parentId, Integer id);
 
 //    List<TimeSchedulePo> selectScheduleByParentId(Integer parentId, Long startTime, Long endTime);
 

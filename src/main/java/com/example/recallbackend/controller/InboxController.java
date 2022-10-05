@@ -17,7 +17,7 @@ import java.util.List;
  * @date 2022.09.21
  */
 @RestController
-@RequestMapping(value = "/parent/inbox", method = {RequestMethod.GET, RequestMethod.POST})
+@RequestMapping(value = "/parent/inbox")
 public class InboxController {
 
     @Resource
@@ -35,8 +35,13 @@ public class InboxController {
     }
 
     @PostMapping("/feedback")
-    public CommonResult<String> feedback(@RequestBody FeedbackParam feedbackParam) {
-        return inboxService.feedback(feedbackParam);
+    public CommonResult<String> feedback(Integer parentId, Integer childId, Integer scheduleBoxId, Integer length) {
+        return inboxService.feedback(parentId, childId, scheduleBoxId, length);
+    }
+
+    @PostMapping("/confirm")
+    public CommonResult<String> confirm(Integer userId, Integer voiceId) {
+        return inboxService.confirm(userId, voiceId);
     }
 
     
