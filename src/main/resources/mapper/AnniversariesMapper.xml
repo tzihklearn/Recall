@@ -6,8 +6,17 @@
         insert into anniversaries (parent_id, child_id, data, time)
         values (#{parentId}, #{childId}, #{data}, #{time})
     </insert>
+    <delete id="deleteAnniversary">
+        delete from anniversaries
+        where id = #{id,jdbcType=INTEGER}
+            and child_id = #{userId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByMore">
+        delete from anniversaries
+        where child_id = #{userId,jdbcType=INTEGER}
+    </delete>
     <select id="selectAnniversaryPoByUserId" resultType="com.example.recallbackend.pojo.po.AnniversaryPo">
-        select data as data, time as time
+        select id as anniversaryId, data as data, time as time
         from anniversaries
         where child_id = #{userId}
             and time &gt;= #{time}

@@ -13,8 +13,8 @@ import java.util.Objects;
 @Slf4j
 public class SmsUtil {
 
-    private static final String SecretId = "AKIDqVyFJ9lAMK5e094uXyBC2f4GH6i8MNBl";
-    private static final String SecretKey = "UkncFfsseEahZEgtrfEZfV6UdWAYidKn";
+    private static final String SecretId = "AKIDgGDD0Z6UhihVCi3CA3mJfpoWFEGIF0qf";
+    private static final String SecretKey = "lJl26AC7zf8RbejpspfWK3fGpHbzSqFV";
 
     /**
      * 短信 SdkAppId，在 [短信控制台](https://console.cloud.tencent.com/smsv2/app-manage)  添加应用后生成的实际 SdkAppId，示例如1400006666。

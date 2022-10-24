@@ -1,6 +1,6 @@
 package com.example.recallbackend.config;
 
-import com.example.recallbackend.lnterceptor.MyHanlderInterceptor;
+import com.example.recallbackend.lnterceptor.MyHandlerInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -13,7 +13,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Resource
-    private MyHanlderInterceptor myHanlderInterceptor;
+    private MyHandlerInterceptor myHandlerInterceptor;
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -23,7 +23,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //配置拦截的请求和不拦截的请求
-        registry.addInterceptor(myHanlderInterceptor)
+        registry.addInterceptor(myHandlerInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login/**");
     }

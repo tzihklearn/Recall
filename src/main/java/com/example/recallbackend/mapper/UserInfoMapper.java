@@ -22,4 +22,7 @@ public interface UserInfoMapper {
     int updateNameByUserId(Integer userId, String name);
 
     int updateQRCodeByUserIdInt(Integer userId, String qrCode);
+
+    UserInfo selectById(Integer userId);
+
 }

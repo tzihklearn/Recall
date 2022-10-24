@@ -1,9 +1,10 @@
 package com.example.recallbackend.pojo.dto.param;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 /**
  * @author tzih
@@ -18,7 +19,8 @@ public class ChangeNameParam {
     @NotNull
     private Integer beChangerId;
 
-    @Pattern(regexp = "", message = "姓名不符合规范")
+    @NotBlank
+    @Pattern(regexp = "[\\u4e00-\\u9fa5]", message = "姓名不符合规范")
     private String name;
 
 }

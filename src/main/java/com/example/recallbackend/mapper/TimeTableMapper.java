@@ -1,6 +1,7 @@
 package com.example.recallbackend.mapper;
 
 import com.example.recallbackend.Service.BindingService;
+import com.example.recallbackend.pojo.dto.param.ConfirmParam;
 import com.example.recallbackend.pojo.dto.param.NewlyBuildParam;
 import com.example.recallbackend.pojo.dto.param.temporary.VideoScheduleParam;
 import com.example.recallbackend.pojo.po.IndexGetAllPo;
@@ -16,13 +17,13 @@ public interface TimeTableMapper {
 
     int insertBySchedule(@Param("parentId") Integer parentId, @Param("childId") Integer childId,
                          @Param("ScheduleBoxId") Integer ScheduleBoxId,
-                         @Param("videoScheduleParamList") List<VideoScheduleParam> videoScheduleParamList);
+                         @Param("videoScheduleParam") VideoScheduleParam videoScheduleParam);
 
     int insertMemorandum(@Param("newlyBuildParam") NewlyBuildParam newlyBuildParam, @Param("scheduleId") Integer scheduleId);
 
     int insertFeedbackBy(Integer parentId, Integer childId, Integer scheduleId, Integer scheduleBoxId);
 
-    int updateState(Integer parentId, Integer id);
+    int updateState(@Param("confirmParam") ConfirmParam confirmParam);
 
 //    List<TimeSchedulePo> selectScheduleByParentId(Integer parentId, Long startTime, Long endTime);
 

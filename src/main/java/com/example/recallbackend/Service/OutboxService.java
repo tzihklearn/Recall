@@ -2,16 +2,13 @@ package com.example.recallbackend.Service;
 
 import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.dto.param.CreatOutBoxParam;
-import com.example.recallbackend.pojo.dto.result.UserResult;
-import com.example.recallbackend.pojo.dto.result.OutBoxGetAllResult;
-import com.example.recallbackend.pojo.dto.result.OutboxDetailsResult;
-import com.example.recallbackend.pojo.dto.result.VideoPacketResult;
+import com.example.recallbackend.pojo.dto.result.*;
 
 import java.util.List;
 
 public interface OutboxService {
 
-    CommonResult<List<OutBoxGetAllResult>> getAllOutBox(Integer userId, String keyWord);
+    CommonResult<List<OutBoxGetAllResult>> getAllOutBox( String keyWord);
 
     CommonResult<OutboxDetailsResult> getDetailsOutBox(Integer parentId, Integer childId, Integer scheduleBoxId);
 
@@ -20,4 +17,6 @@ public interface OutboxService {
     CommonResult<List<UserResult>> getAllAddressee(Integer userId);
 
     CommonResult<List<VideoPacketResult>> getAllVideoPacket(Integer userId);
+
+    CommonResult<List<VideoListResult>> getAllVideo();
 }

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.recallbackend.mapper.ScheduleBoxMapper">
     <insert id="insertScheduleByUserId">
-        insert into schedule_box (parent_id, child_id, time)
-        values (#{parentId}, #{childId}, #{dayTime})
+        insert into schedule_box (parent_id, child_id, time, relation_id)
+        values (#{parentId}, #{childId}, #{dayTime}, #{relationId})
     </insert>
     <update id="updateUnFeedbackById">
         update schedule_box
@@ -12,7 +12,8 @@
     </update>
 
     <select id="selectOutBoxByUserId" resultType="com.example.recallbackend.pojo.po.OutBoxGetAllPo">
-        select b.parent_id as userId, GROUP_CONCAT(DISTINCT ur.parent_name) as name, GROUP_CONCAT(DISTINCT b.id) as scheduleBoxId, GROUP_CONCAT(LEFT(tt.data, 3)) as data, GROUP_CONCAT(tt.time) as times,
+        select b.parent_id as userId, GROUP_CONCAT(DISTINCT ur.parent_name) as name, b.id as scheduleBoxId,
+               CONCAT(GROUP_CONCAT(LEFT(tt.data, 3)), '...') as data, GROUP_CONCAT(tt.time) as times,
                GROUP_CONCAT(DISTINCT b.unfeedback_num) as unFeedbackNum
         from schedule_box b
             right join user_relation ur on ur.id = b.relation_id
@@ -23,11 +24,12 @@
             <if test="keyWord != null">
                 and ur.parent_name like concat('%', #{keyWord}, '%')
             </if>
-        group by b.parent_id
+        group by b.parent_id, b.id
     </select>
     <select id="selectVoiceById"
             resultType="com.example.recallbackend.pojo.dto.result.temporary.VoiceRecordingResult">
-        select s.data as data, s.video_url as videoUrl, tt.time as times, tt.state as state
+        select tt.id as videoId, s.data as data, s.video_url as videoUrl,
+               FROM_UNIXTIME(tt.time, '%H:%i') as times, tt.time as timeStamp, tt.state as state
         from schedule_box b
             left join time_table tt on tt.schedule_box_id = b.id
             left join schedule s on s.id = tt.schedule_id
@@ -49,7 +51,6 @@
         from schedule_box
         where parent_id = #{parentId}
             and child_id = #{childId}
---             and time between #{startTime} and #{endTime}
         order by id desc
         limit 1
     </select>

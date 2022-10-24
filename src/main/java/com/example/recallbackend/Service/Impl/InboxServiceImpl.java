@@ -6,6 +6,7 @@ import com.example.recallbackend.mapper.ScheduleMapper;
 import com.example.recallbackend.mapper.TimeTableMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.dto.param.ConfirmParam;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
 import com.example.recallbackend.pojo.dto.result.InBoxGetAllResult;
 import com.example.recallbackend.pojo.dto.result.temporary.VoiceRecordingResult;
@@ -74,7 +75,8 @@ public class InboxServiceImpl implements InboxService {
             String times = indexGetAllPo.getTimes();
             List<String> timeList = new ArrayList<>();
             for (String timeString : times.split(",")) {
-                timeList.add(TimeUtils.transformHhMm(Long.getLong(timeString, 10)));
+
+                timeList.add(TimeUtils.transformHhMm(Integer.parseInt(timeString)));
             }
             results.add(new InBoxGetAllResult(indexGetAllPo.getUserId(), indexGetAllPo.getName(), indexGetAllPo.getScheduleBoxId(),
                     indexGetAllPo.getData(), timeList));
@@ -105,8 +107,9 @@ public class InboxServiceImpl implements InboxService {
         List<VoiceRecordingPo> voiceRecordingPos = timeTableMapper.selectVoiceByUserId(scheduleBoxId, time, dayTimeEnd);
 
         for (VoiceRecordingPo voiceRecordingPo : voiceRecordingPos) {
-            voiceRecordingResults.add(new VoiceRecordingResult(voiceRecordingPo.getVoiceId(), voiceRecordingPo.getData(), voiceRecordingPo.getVideoUrl(),
-                    TimeUtils.transformHhMm(voiceRecordingPo.getTimes()), voiceRecordingPo.getState()));
+            voiceRecordingResults.add(new VoiceRecordingResult(voiceRecordingPo.getVoiceId(), voiceRecordingPo.getData(),
+                    voiceRecordingPo.getVideoUrl(), TimeUtils.transformHhMm(voiceRecordingPo.getTimes()), voiceRecordingPo.getTimes(),
+                    voiceRecordingPo.getState()));
         }
 
         RelationNamePo relationNamePo = userRelationMapper.selectNameByUserId(parentId, childId);
@@ -123,6 +126,30 @@ public class InboxServiceImpl implements InboxService {
         StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
         MultipartHttpServletRequest multipartHttpServletRequest = multipartResolver.resolveMultipart(httpServletRequest);
         MultipartFile multipartFile = multipartHttpServletRequest.getFile("file");
+
+
+//        String path = "./";
+//        OutputStream os = null;
+//        byte[] bytes;
+//        int len;
+//        try {
+//            InputStream inputStream = multipartFile.getInputStream();
+//            bytes = multipartFile.getBytes();
+//
+//            File file = new File(path);
+//
+//            os = new FileOutputStream(file.getPath() + File.separator + "test");
+//
+//
+//            while ((len = inputStream.read(bytes)) != -1) {
+//                os.write(bytes, 0, len);
+//            }
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
         assert multipartFile != null;
         boolean b = QiniuUtil.setVideo(scheduleMapper, multipartFile, parentId, null, length);
 
@@ -147,9 +174,9 @@ public class InboxServiceImpl implements InboxService {
     }
 
     @Override
-    public CommonResult<String> confirm(Integer userId, Integer voiceId) {
+    public CommonResult<String> confirm(ConfirmParam confirmParam) {
 
-        int i = timeTableMapper.updateState(userId, voiceId);
+        int i = timeTableMapper.updateState(confirmParam);
         if (i == 0) {
             return CommonResult.fail("更新失败");
         }

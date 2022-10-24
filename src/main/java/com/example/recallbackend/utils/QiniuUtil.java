@@ -1,9 +1,6 @@
 package com.example.recallbackend.utils;
 
 import com.example.recallbackend.mapper.ScheduleMapper;
-import com.example.recallbackend.mapper.TimeTableMapper;
-import com.example.recallbackend.pojo.dto.param.NewlyBuildParam;
-import com.example.recallbackend.pojo.dto.param.SubmitVideoParam;
 import com.example.recallbackend.pojo.po.VideoPo;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
@@ -15,12 +12,11 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.sun.media.sound.WaveFileReader;
-import com.sun.media.sound.WaveFloatFileReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -101,23 +97,25 @@ public class QiniuUtil {
     public static boolean setVideo(ScheduleMapper scheduleMapper, MultipartFile multipartFile,
                                    Integer userId, String data) {
 
-
         try {
             //注：上传文件之后流会被关闭
             assert multipartFile != null;
+
             InputStream inputStream = multipartFile.getInputStream();
 
             log.info("获取音频文件帧率");
             WaveFileReader waveFileReader = new WaveFileReader();
+//            WaveFloatFileReader waveFileReader = new WaveFloatFileReader();
 
             log.info("获取音频文件播放时间");
             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
 
             AudioFileFormat audioFileFormat = waveFileReader.getAudioFileFormat(bufferedInputStream);
 
+
             int length = (int) ( (double)audioFileFormat.getFrameLength() / audioFileFormat.getFormat().getFrameRate());
 //            int length = 6;
-
+            System.out.println(length);
             log.info("将文件上传");
             log.info("以当前时间戳为文件名");
             String key = userId + TimeUtils.getNowTime() + ".wav";

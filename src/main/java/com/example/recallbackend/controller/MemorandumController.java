@@ -22,12 +22,13 @@ public class MemorandumController {
     private MemorandumService memorandumService;
 
     @GetMapping("/all")
-    public CommonResult<List<MemorandumResult>> getAllMemorandum(@NotNull Integer userId) {
+    public CommonResult<List<MemorandumResult>> getAllMemorandum(@RequestParam Integer userId) {
         return memorandumService.getAllMemorandum(userId);
     }
 
     @PostMapping("/newly-build")
-    public CommonResult<String> newlyBuildMemorandum(Integer userId, String data, Long time, Integer length) {
+    public CommonResult<String> newlyBuildMemorandum(@RequestParam Integer userId, @RequestParam String data,
+                                                     @RequestParam Long time, @RequestParam Integer length) {
         return memorandumService.newlyBuildMemorandum(userId, data, time, length);
     }
 

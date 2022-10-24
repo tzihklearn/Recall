@@ -36,15 +36,21 @@
         from user_relation
         where parent_id = #{parentId,jdbcType=INTEGER}
     </select>
-    <select id="selectParentByChildId" resultType="com.example.recallbackend.pojo.dto.result.UserResult">
-        select child_id as userId, child_name as UserName
+    <select id="selectParentByChildId" resultType="com.example.recallbackend.pojo.dto.result.GetParentResult">
+        select parent_id as value, parent_name as text
         from user_relation
         where child_id = #{childId,jdbcType=INTEGER}
     </select>
     <select id="selectParentIdAndNameByChildId"
             resultType="com.example.recallbackend.pojo.dto.result.UserResult">
-        select parent_id, parent_name
+        select parent_id as userId, parent_name as name
         from user_relation
         where child_id = #{childId,jdbcType=INTEGER}
+    </select>
+    <select id="selectId" resultType="java.lang.Integer">
+        select id
+        from user_relation
+        where child_id = #{childId,jdbcType=INTEGER}
+            and parent_id = #{parentId,jdbcType=INTEGER}
     </select>
 </mapper>

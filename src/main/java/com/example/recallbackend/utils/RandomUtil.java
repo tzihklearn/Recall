@@ -19,7 +19,7 @@ public class RandomUtil {
         StringBuilder result = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; ++i) {
-            result.append(random.nextInt(5));
+            result.append(random.nextInt(10));
         }
         return result.toString();
     }

@@ -1,6 +1,7 @@
 package com.example.recallbackend.Service;
 
 import com.example.recallbackend.pojo.CommonResult;
+import com.example.recallbackend.pojo.dto.param.ConfirmParam;
 import com.example.recallbackend.pojo.dto.param.FeedbackParam;
 import com.example.recallbackend.pojo.dto.param.SubmitVideoParam;
 import com.example.recallbackend.pojo.dto.result.InboxDetailsResult;
@@ -16,5 +17,5 @@ public interface InboxService {
 
     CommonResult<String> feedback(Integer parentId, Integer childId, Integer scheduleBoxId, Integer length);
 
-    CommonResult<String> confirm(Integer userId, Integer voiceId);
+    CommonResult<String> confirm(ConfirmParam confirmParam);
 }

@@ -6,6 +6,9 @@ server:
     keyStoreType: JKS
 
 spring:
+  output:
+    ansi:
+      enabled: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://127.0.0.1:3300/Recall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
@@ -46,4 +49,4 @@ lark-robot:
 #  profile: dev
 logging:
   level:
-    com.sipc.mmtbackend.mapper: debug
+    com.example.recallbackend.mapper: debug

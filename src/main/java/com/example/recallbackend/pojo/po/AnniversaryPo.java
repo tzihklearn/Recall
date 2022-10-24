@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class AnniversaryPo {
 
+    Integer anniversaryId;
+
     String data;
 
     Long time;

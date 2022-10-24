@@ -1,5 +1,6 @@
 package com.example.recallbackend.mapper;
 
+import com.example.recallbackend.pojo.dto.result.GetParentResult;
 import com.example.recallbackend.pojo.dto.result.UserResult;
 import com.example.recallbackend.pojo.po.RelationNamePo;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,7 +17,7 @@ public interface UserRelationMapper {
                         @Param("childName") String childName);
 
     int updateParentName(@Param("parentId") Integer parentId, @Param("childId") Integer childId,
-                        @Param("childName") String ParentName);
+                        @Param("parentName") String parentName);
 
     int deleteRelation(Integer parentId, Integer childId);
 
@@ -24,8 +25,10 @@ public interface UserRelationMapper {
 
     List<UserResult> selectChildByParentId(Integer parentId);
 
-    List<UserResult> selectParentByChildId(Integer childId);
+    List<GetParentResult> selectParentByChildId(Integer childId);
 
     List<UserResult> selectParentIdAndNameByChildId(Integer childId);
+
+    Integer selectId(Integer childId, Integer parentId);
 
 }

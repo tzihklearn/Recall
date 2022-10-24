@@ -8,6 +8,7 @@ import com.example.recallbackend.pojo.dto.result.LoginSuccessResult;
 import com.example.recallbackend.pojo.dto.result.LoginVerificationResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/login")
@@ -17,13 +18,13 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/phone-get-sms")
-    public CommonResult<String> loginToGetSms(@RequestBody PhoneParam phoneParam) {
+    public CommonResult<String> loginToGetSms(@Valid @RequestBody PhoneParam phoneParam) {
         return loginService.loginToGetSms(phoneParam);
     }
 
 
     @PostMapping("/phone-verification-sms")
-    public CommonResult<LoginVerificationResult> loginVerification(@RequestBody VerificationParam verificationParam) {
+    public CommonResult<LoginVerificationResult> loginVerification(@Valid @RequestBody VerificationParam verificationParam) {
         return loginService.loginVerification(verificationParam);
     }
 

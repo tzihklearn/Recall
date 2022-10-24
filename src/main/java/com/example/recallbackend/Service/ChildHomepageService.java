@@ -4,7 +4,6 @@ import com.example.recallbackend.pojo.CommonResult;
 import com.example.recallbackend.pojo.dto.param.*;
 import com.example.recallbackend.pojo.dto.result.AnniversaryResult;
 import com.example.recallbackend.pojo.dto.result.UserResult;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -25,5 +24,9 @@ public interface ChildHomepageService {
     CommonResult<String> setAnniversary(AnniversaryParam anniversaryParam);
 
     CommonResult<List<AnniversaryResult>> getAnniversaries(Integer userId);
+
+    CommonResult<String> removeAnniversary(RemoveParam removeParam);
+
+    CommonResult<String> remove();
 
 }

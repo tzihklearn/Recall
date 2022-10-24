@@ -19,6 +19,8 @@ public class VoiceRecordingResult {
 
     String times;
 
+    Long timeStamp;
+
     Integer state;
 
 }

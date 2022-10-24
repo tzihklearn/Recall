@@ -11,6 +11,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class AnniversaryResult {
 
+    Integer anniversaryId;
+
     String data;
 
     String time;

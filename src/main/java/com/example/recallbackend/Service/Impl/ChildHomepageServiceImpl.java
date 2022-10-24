@@ -1,6 +1,8 @@
 package com.example.recallbackend.Service.Impl;
 
 import com.example.recallbackend.Service.ChildHomepageService;
+import com.example.recallbackend.lnterceptor.CurrentUser;
+import com.example.recallbackend.lnterceptor.CurrentUserUtil;
 import com.example.recallbackend.mapper.AnniversariesMapper;
 import com.example.recallbackend.mapper.UserInfoMapper;
 import com.example.recallbackend.mapper.UserRelationMapper;
@@ -14,15 +16,18 @@ import com.example.recallbackend.utils.RedisUtils.RedisUtil;
 import com.example.recallbackend.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author tzih
- * @date 2022.09.21
+ * &#064;date  2022.09.21
  */
 @Service
 @Slf4j
@@ -41,7 +46,7 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
     private RedisUtil redisUtil;
 
     @Override
-    public CommonResult<UserResult> getName(Integer userId) {
+    public CommonResult<UserResult> getName(@RequestParam Integer userId) {
         UserResult result = new UserResult();
 
         UserInfo userInfo = userInfoMapper.selectAllByUserId(userId);
@@ -54,8 +59,11 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
 
     @Override
 
-    public CommonResult<String> changeUserName(NameParam nameParam) {
-        int i = userInfoMapper.updateNameByUserId(nameParam.getUserId(), nameParam.getName());
+    public CommonResult<String> changeUserName(@RequestBody NameParam nameParam) {
+
+        CurrentUser currentUser = CurrentUserUtil.getCurrentUser();
+
+        int i = userInfoMapper.updateNameByUserId(currentUser.getId(), nameParam.getName());
 
         if (i == 1) {
             return CommonResult.success("更改用户名成功");
@@ -66,9 +74,14 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
     }
 
     @Override
-    public CommonResult<String> binding(QRCodeParam qrCodeParam) {
+    public CommonResult<String> binding(@Valid @RequestBody QRCodeParam qrCodeParam) {
 
         Integer parentId = userInfoMapper.selectUserIdByQRCode(qrCodeParam.getKey());
+
+        Integer r = userRelationMapper.selectId(qrCodeParam.getUserId(), parentId);
+        if ( r != null) {
+            return CommonResult.fail("已绑定");
+        }
 
         if (parentId == null) {
             return CommonResult.fail("二维码不存在");
@@ -92,15 +105,15 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
     }
 
     @Override
-    public CommonResult<List<UserResult>> getAllBinding(Integer userId) {
+    public CommonResult<List<UserResult>> getAllBinding(@RequestParam Integer userId) {
 
-        List<UserResult> results = userRelationMapper.selectParentByChildId(userId);
+        List<UserResult> results = userRelationMapper.selectParentIdAndNameByChildId(userId);
 
         return CommonResult.success(results);
     }
 
     @Override
-    public CommonResult<String> setParentName(ChangeNameParam changeNameParam) {
+    public CommonResult<String> setParentName(@Valid @RequestBody ChangeNameParam changeNameParam) {
 
         if (changeNameParam.getName() == null) {
             return CommonResult.fail("姓名不得为空");
@@ -117,10 +130,10 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
     }
 
     @Override
-    public CommonResult<String> unbinding(RelationParam relationParam) {
+    public CommonResult<String> unbinding(@Valid @RequestBody RelationParam relationParam) {
         int i = userRelationMapper.deleteRelation(relationParam.getParentId(), relationParam.getChildId());
 
-        if (i == 0) {
+        if (i == 1) {
             return CommonResult.success("解绑成功");
         }
         else {
@@ -129,7 +142,7 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
     }
 
     @Override
-    public CommonResult<String> setAnniversary(AnniversaryParam anniversaryParam) {
+    public CommonResult<String> setAnniversary(@Valid @RequestBody AnniversaryParam anniversaryParam) {
 
         int i = anniversariesMapper.insertAnniversary(anniversaryParam);
         if (i == 0) {
@@ -142,7 +155,7 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
     }
 
     @Override
-    public CommonResult<List<AnniversaryResult>> getAnniversaries(Integer userId) {
+    public CommonResult<List<AnniversaryResult>> getAnniversaries(@RequestParam Integer userId) {
 
         List<AnniversaryResult> results = new ArrayList<>();
 
@@ -158,9 +171,34 @@ public class ChildHomepageServiceImpl implements ChildHomepageService {
                 log.info("时间戳转换异常");
                 throw new RuntimeException(e);
             }
-            results.add(new AnniversaryResult(anniversaryPo.getData(), TimeUtils.transform(anniversaryPo.getTime()), day));
+            results.add(new AnniversaryResult(anniversaryPo.getAnniversaryId(), anniversaryPo.getData(),
+                    TimeUtils.transform(anniversaryPo.getTime()), day));
         }
 
         return CommonResult.success(results);
+    }
+
+    @Override
+    public CommonResult<String> removeAnniversary(RemoveParam removeParam) {
+
+        CurrentUser currentUser = CurrentUserUtil.getCurrentUser();
+
+        int i = anniversariesMapper.deleteAnniversary(removeParam.getAnniversaryId(), currentUser.getId());
+
+        if (i != 1) {
+            return CommonResult.fail("删除失败");
+        }
+
+        return CommonResult.success("删除成功");
+    }
+
+    @Override
+    public CommonResult<String> remove() {
+
+        CurrentUser currentUser = CurrentUserUtil.getCurrentUser();
+
+        int i = anniversariesMapper.deleteByMore(currentUser.getId());
+
+        return CommonResult.success("删除成功");
     }
 }

@@ -1,5 +1,6 @@
 package com.example.recallbackend.pojo.dto.param;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
 @Data
 public class FeedbackParam {
 
+    @JsonProperty("parentId")
     Integer userId;
 
     Integer childId;

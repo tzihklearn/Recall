@@ -22,4 +22,21 @@
         order by id desc
         limit 1
     </select>
+    <select id="selectVoiceByUserId" resultType="com.example.recallbackend.pojo.dto.result.VoiceResult">
+        select id as voiceId, data as data, length as length
+        from schedule
+        where user_id = #{userId}
+    </select>
+    <select id="selectOneByUserId" resultType="com.example.recallbackend.pojo.dto.result.VoiceResult">
+        select id as voiceId, data as data, length as length
+        from schedule
+        where user_id = #{userId}
+        order by id desc
+        limit 1
+    </select>
+    <select id="selectVideosByUserId" resultType="com.example.recallbackend.pojo.dto.result.VideoListResult">
+        select id as value, data as text, video_url as voicePath
+        from schedule
+        where user_id = #{userId}
+    </select>
 </mapper>

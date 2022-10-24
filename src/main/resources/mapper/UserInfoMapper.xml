@@ -34,6 +34,11 @@
         from user_info
         where qr_code = #{qrCode,jdbcType=VARCHAR}
     </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        select *
+        from user_info
+        where user_id = #{userId,jdbcType=INTEGER}
+    </select>
 
     <insert id="insertAllByUserId" parameterType="com.example.recallbackend.pojo.domain.UserInfo">
         insert into user_info (name, phone, role_model, state)

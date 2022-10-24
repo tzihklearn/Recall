@@ -13,7 +13,7 @@ import java.util.List;
 public interface ScheduleBoxMapper {
 
     int insertScheduleByUserId(@Param("parentId") Integer parentId, @Param("childId") Integer childId,
-                               @Param("dayTime") Long time);
+                               @Param("dayTime") Long time, @Param("relationId") Integer relationId);
 
     int updateUnFeedbackById(Integer Id);
 

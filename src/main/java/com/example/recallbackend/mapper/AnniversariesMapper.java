@@ -12,6 +12,10 @@ public interface AnniversariesMapper {
 
     int insertAnniversary(AnniversaryParam anniversaryParam);
 
+    int deleteAnniversary(Integer id, Integer userId);
+
+    int deleteByMore(Integer userId);
+
     List<AnniversaryPo> selectAnniversaryPoByUserId(@Param("userId") Integer userId, @Param("time") Long time);
 
 }

@@ -10,12 +10,13 @@ import com.example.recallbackend.pojo.dto.result.UserResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
  * @author tzih
- * @date 2022.09.19
+ * &#064;date  2022.09.19
  */
 @RestController
 @RequestMapping(value = "/parent/binding")
@@ -25,32 +26,32 @@ public class BindingController {
     private BindingService bindingService;
     
     @GetMapping("/get-name")
-    public CommonResult<UserResult> getName(@NotNull Integer userId) {
+    public CommonResult<UserResult> getName(@RequestParam Integer userId) {
         return bindingService.getName(userId);
     }
 
     @GetMapping("/all")
-    public CommonResult<List<UserResult>> getAllBinding(@NotNull Integer parentId) {
+    public CommonResult<List<UserResult>> getAllBinding(@RequestParam Integer parentId) {
         return bindingService.getAllBinding(parentId);
     }
 
     @PostMapping("/change-name")
-    public CommonResult<String> parentChangeName(@RequestBody NameParam nameParam) {
+    public CommonResult<String> parentChangeName(@Valid @RequestBody NameParam nameParam) {
         return bindingService.parentChangeName(nameParam);
     }
 
     @PostMapping("/change-child-name")
-    public CommonResult<String> setChildName(@RequestBody ChangeNameParam changeNameParam) {
+    public CommonResult<String> setChildName(@Valid @RequestBody ChangeNameParam changeNameParam) {
         return bindingService.setChildName(changeNameParam);
     }
 
     @PostMapping("/unbinding")
-    public CommonResult<String> unbinding(@RequestBody RelationParam relationParam) {
+    public CommonResult<String> unbinding(@Valid @RequestBody RelationParam relationParam) {
         return bindingService.unbinding(relationParam);
     }
 
     @PostMapping("/creat-qrcode")
-    public CommonResult<String> creatQRCode(@RequestBody UserIdParam userIdParam) {
+    public CommonResult<String> creatQRCode(@Valid @RequestBody UserIdParam userIdParam) {
         return bindingService.creatQRCode(userIdParam);
     }
 

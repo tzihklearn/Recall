@@ -17,17 +17,17 @@ class RecallBackEndApplicationTests {
 
     @Test
     void contextLoads() throws IOException, UnsupportedAudioFileException {
-
-        String s = QiniuUtil.DownloadFiles("蝉鸣.wav");
-        System.out.println(s);
-        s = QiniuUtil.DownloadFilesAndDownload("蝉鸣.wav", "蝉鸣.wav");
-        URL url = new URL(s);
-        HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(httpsURLConnection.getInputStream());
-        WaveFileReader waveFileReader = new WaveFileReader();
-        AudioFileFormat audioFileFormat = waveFileReader.getAudioFileFormat(bufferedInputStream);
-        int length = (int) ( (audioFileFormat.getFrameLength() + 0.0) / audioFileFormat.getFormat().getFrameRate());
-        System.out.println(length);
+//
+//        String s = QiniuUtil.DownloadFiles("蝉鸣.wav");
+//        System.out.println(s);
+//        s = QiniuUtil.DownloadFilesAndDownload("蝉鸣.wav", "蝉鸣.wav");
+//        URL url = new URL(s);
+//        HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
+//        BufferedInputStream bufferedInputStream = new BufferedInputStream(httpsURLConnection.getInputStream());
+//        WaveFileReader waveFileReader = new WaveFileReader();
+//        AudioFileFormat audioFileFormat = waveFileReader.getAudioFileFormat(bufferedInputStream);
+//        int length = (int) ( (audioFileFormat.getFrameLength() + 0.0) / audioFileFormat.getFormat().getFrameRate());
+//        System.out.println(length);
 
 //        throw new NullPointerException();
     }
